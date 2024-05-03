@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from "@/components/Navbar/Navbar";
+import Sidebar from "@/components/Sidebar/Sidebar";
+import Main from "@/components/Main/Main";
 
 export const metadata: Metadata = {
   title: "Bug Tracker",
@@ -14,7 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={''}>
-        {children}
+        <Navbar/>
+        <div style={{display:'flex'}}>
+          <Sidebar/>
+          {children}
+        </div>
       </body>
     </html>
   );

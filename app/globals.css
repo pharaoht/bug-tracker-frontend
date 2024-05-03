@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: var(--lato);
 }
 
 a {
@@ -43,5 +44,4 @@ body.dark {
 
 body {
   background: var(--grey);
-  overflow-x: hidden;
 }
