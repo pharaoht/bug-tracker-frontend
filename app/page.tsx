@@ -1,9 +1,10 @@
+import Sidebar from "@/components/Sidebar/Sidebar";
 import styles from "./page.module.css";
 
 const Home = () => {
   return (
     <main className={styles.main}>
-      Home
+      <Sidebar/>
     </main>
   );
 }
