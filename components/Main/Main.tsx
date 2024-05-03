@@ -1,13 +1,13 @@
 import React from 'react'
 import styles from './main.module.css';
-import Link from 'next/link';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';
+import Widget from '../Widget/Widget';
 
 const Main = () => {
   return (
     <div className={styles.main}>
         <Breadcrumb/>
-
+        <Widget/>
     </div>
   )
 }
