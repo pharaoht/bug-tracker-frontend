@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import styles from './page.module.css'
 import Navbar from "@/components/Navbar/Navbar";
 import Sidebar from "@/components/Sidebar/Sidebar";
-import Main from "@/components/Main/Main";
 
 export const metadata: Metadata = {
   title: "Bug Tracker",
@@ -16,9 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={''}>
+      <body>
         <Navbar/>
-        <div style={{display:'flex'}}>
+        <div className={styles.divider}>
           <Sidebar/>
           {children}
         </div>
