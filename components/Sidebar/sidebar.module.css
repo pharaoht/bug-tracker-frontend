@@ -56,6 +56,10 @@
     position: relative;
 }
 
+.sideMenu li:hover{
+    color: var(--blue) !important;
+}
+
 .sideMenu li.active::before {
     content: '';
     position: absolute;
