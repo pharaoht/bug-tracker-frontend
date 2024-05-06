@@ -19,7 +19,7 @@ const Sidebar = ({ pageIndex, setPageIndex }: SidebarProps) => {
 
     const renderSideMenu = () => (
         sideMenuLinks.map((itm, idx) => (
-            <li className={`${idx === pageIndex && styles.active}`} onClick={() => setPageIndex(idx)}>
+            <li key={itm.title} className={`${idx === pageIndex && styles.active}`} onClick={() => setPageIndex(idx)}>
                 <Link href="#" className={styles.link}>
                         <i className={styles.bx}></i>
                         <span className={styles.text}>{itm.title}</span>

@@ -6,7 +6,7 @@ const Table = () => {
         <div className={styles.tableData}>
             <div className={styles.order}>
                 <div className={styles.head}>
-                    <h3>Recent Orders</h3>
+                    <h3>Recent Tickets</h3>
                     <i className={styles.bx} >v</i>
                     <i className={styles.bx}>x</i>
                 </div>
@@ -14,7 +14,7 @@ const Table = () => {
                     <thead>
                         <tr>
                             <th>User</th>
-                            <th>Date Order</th>
+                            <th>Date Added</th>
                             <th>Status</th>
                         </tr>
                     </thead>

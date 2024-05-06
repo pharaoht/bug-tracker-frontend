@@ -2,18 +2,23 @@ import React from 'react';
 import styles from './breadcrumb.module.css';
 import Link from 'next/link';
 
-const Breadcrumb = () => {
+interface BreadcrumbProps {
+    title: string;
+    location: string;
+}
+
+const Breadcrumb = ({ title, location} : BreadcrumbProps) => {
   return (
     <div className={styles.headTitle}>
         <div className={styles.left}>
-            <h1>Dashboard</h1>
+            <h1>{title}</h1>
             <ul className={styles.breadcrumb}>
                 <li>
-                    <Link href="#">Dashboard</Link>
+                    <Link href="#">{title}</Link>
                 </li>
-                <li><i className={styles.bx}></i></li>
+                <li><i className={styles.bx}>{'>'}</i></li>
                 <li>
-                    <Link href="#" className={styles.active}>Home</Link>
+                    <Link href="#" className={styles.active}>{location}</Link>
                 </li>
             </ul>
         </div>
