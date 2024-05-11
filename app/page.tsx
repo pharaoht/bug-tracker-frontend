@@ -7,7 +7,7 @@ import Teams from "@/containers/Teams/Teams";
 import ModuleWrapper from "@/components/ModuleWrapper/ModuleWrapper";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { useState } from "react";
-import { DashboardContextProvider } from "@/context/DashboardContext";
+import { DashboardContextProvider } from "../context/DashboardContext";
 
 const Home = () => {
 

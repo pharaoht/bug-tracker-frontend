@@ -9,7 +9,7 @@ import UrgentIcon from '@mui/icons-material/Error';
 import MeetingIcon from '@mui/icons-material/Event';
 import useHttp from '@/hooks/useHttp';
 import { dashboardApi } from '@/api/Dashboard/dashboard.api';
-import DashboardContext from '@/context/DashboardContext';
+import DashboardContext from '../../context/DashboardContext';
 
 const breadCrumbProps = { title: 'Dashboard', location: 'Home', }
 
