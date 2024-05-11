@@ -22,12 +22,18 @@ const Breadcrumb = ({ title, location} : BreadcrumbProps) => {
                 </li>
             </ul>
         </div>
-        <Link href="#" className={styles.btnDownload}>
 
-            <i className='bx bxs-cloud-download' ></i>
-            <span className={styles.text}>Download PDF</span>
+        <div className={styles.btnHolder}>
+            
+            <div className={styles.create}>
+                <span className={styles.text}>Create Issue</span>
+            </div >
 
-        </Link>
+            <div className={styles.btnDownload}>
+                <i className='bx bxs-cloud-download' ></i>
+                <span className={styles.text}>Download PDF</span>
+            </div>
+        </div>
     </div>
   )
 }

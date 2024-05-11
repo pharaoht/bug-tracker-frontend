@@ -110,6 +110,10 @@
     color: var(--red);
 }
 
+.sideMenu li a.login{
+    color: var(--blue);
+}
+
 .sideMenu.top li a:hover {
     color: var(--blue);
 }

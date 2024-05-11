@@ -7,17 +7,35 @@ import Teams from "@/containers/Teams/Teams";
 import ModuleWrapper from "@/components/ModuleWrapper/ModuleWrapper";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { useState } from "react";
+import { DashboardContextProvider } from "@/context/DashboardContext";
 
 const Home = () => {
 
   const [ pageIndex, setPageIndex ] = useState(0);
 
   const modules = [
-    Dashboard,
-    Issues,
-    Messages,
-    Teams,
-  ];
+    {
+      component: () => (
+        <DashboardContextProvider>
+          <Dashboard />
+        </DashboardContextProvider>
+      ),
+      key: 'dashboard'
+    },
+    { 
+      component: () => (
+        <Issues/>
+      ), 
+      key: 'issues' 
+    },
+    { 
+      component: () => (
+        <Messages/>
+      ), 
+      key: 'messages' 
+    },
+  ]
+
 
 
   return (
@@ -26,9 +44,12 @@ const Home = () => {
         pageIndex={pageIndex}
         setPageIndex={setPageIndex}
       />
-      <ModuleWrapper>
-        {modules[pageIndex]()}
-      </ModuleWrapper>
+
+      {
+        <ModuleWrapper>
+          { modules[pageIndex].component()}
+        </ModuleWrapper>
+      }
     </main>
   );
 }

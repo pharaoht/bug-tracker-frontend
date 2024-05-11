@@ -34,6 +34,24 @@
     pointer-events: unset;
 }
 
+.btnHolder{
+    display: flex;
+    gap: 15px;
+}
+
+.create{
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 36px;
+    background: var(--green);
+    color: var(--light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    grid-gap: 10px;
+    font-weight: 500;
+}
+
 .headTitle .btnDownload {
     height: 36px;
     padding: 0 16px;

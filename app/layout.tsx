@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar/Navbar";
+import { UserContextProvider } from "@/context/UserContext";
 
 export const metadata: Metadata = {
   title: "Bug Tracker",
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar/>
-        {children}
+        <UserContextProvider>
+          <Navbar/>
+          {children}
+        </UserContextProvider>
       </body>
     </html>
   );

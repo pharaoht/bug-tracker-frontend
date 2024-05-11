@@ -1,29 +1,73 @@
-import React from 'react';
+'use client'
+import React, { useContext, useEffect } from 'react';
 import styles from './navbar.module.css';
 import Link from 'next/link';
+import UserContext from '@/context/UserContext';
+import { authApi } from '@/api/Auth/auth.api';
+import useHttp from '@/hooks/useHttp';
+import Image from 'next/image';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SearchIcon from '@mui/icons-material/Search';
 
 const Navbar = () => {
-  return (
-    <nav className={styles.nav}>
-        <i className={`${styles.bx} ${styles.icon}`}></i>
-        <Link href="#" className={`${styles.navLink}`}>Categories</Link>
-        <form action="#">
-            <div className={`${styles.formInput}`}>
-                <input type="search" placeholder="Search..." />
-                <button type="submit" className={`${styles.searchBtn}`}><i className={`${styles.bx} ${styles.searchIcon}`}></i></button>
-            </div>
-        </form>
-        <input type="checkbox" className={styles.switchMode} hidden />
-        <label htmlFor="switchMode" className={`${styles.switchMode}`}></label>
-        <Link href="#" className={`${styles.notification}`}>
-            <i className={`${styles.bx} ${styles.bellIcon}`}></i>
-            <span className={`${styles.num}`}>8</span>
-        </Link>
-        <Link href="#" className={`${styles.profile}`}>
-            hi
-        </Link>
-    </nav>
-  )
+
+    const userContext = useContext(UserContext);
+
+    const userProfile = userContext?.userInfo || [];
+
+    const isLoggedIn = userContext?.isLoggedIn || false;
+
+    const contextSetterUserProfile = userContext?.setUserInfo || (() => {})
+
+    const { userDetails } = authApi;
+
+    const { isLoading, sendRequest } = useHttp()
+
+    const token = typeof window === 'undefined' ? '' : localStorage.getItem('token')
+
+    useEffect(() =>{
+        if(token && userProfile.length == 0){
+            userDetails(contextSetterUserProfile, sendRequest)
+        }
+    }, [token]);
+
+    return (
+        <nav className={styles.nav}>
+            <form action="#">
+                <div className={`${styles.formInput}`}>
+                    <input type="search" placeholder="Search..." />
+                    <button type="submit" className={`${styles.searchBtn}`}>
+  
+                            <SearchIcon/>
+                        
+                    </button>
+                </div>
+            </form>
+            {/* <input type="checkbox" className={styles.switchMode} hidden />
+            <label htmlFor="switchMode" className={`${styles.switchMode}`}></label> */}
+            <span>
+                {
+                    isLoggedIn ? `Welcome ${userProfile[0].name}` : 'Not logged in'
+                }
+            </span>
+            { isLoggedIn &&
+            <Link href="#" className={`${styles.notification}`}>
+                
+                <i className={`${styles.bx} ${styles.bellIcon}`}>
+                    <NotificationsIcon/>
+                </i>
+                <span className={`${styles.num}`}>8</span>
+            </Link>
+            }
+            { isLoggedIn &&
+            <Link href="#" className={`${styles.profile}`}>
+     
+                    <Image src={userProfile[0]?.imageUrl} height={30} width={30} alt='user profile'/>
+                
+            </Link>
+            }
+        </nav>
+    )
 }
 
 export default Navbar;
