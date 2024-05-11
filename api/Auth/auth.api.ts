@@ -7,6 +7,12 @@ const login = async ( ) => {
     window.location.href = url;
 }
 
+const logout = async (
+    httpRequest: (...args: any) => Promise<any>,
+) => {
+
+}
+
 const userDetails = async (
     contextSetter: (...args: any) => void,
     httpRequest: (...args: any) => Promise<any>,
