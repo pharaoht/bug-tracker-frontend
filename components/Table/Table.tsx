@@ -21,8 +21,8 @@ const Table = ({ data }: TablePropTypes) => {
                     </td>
                     <td>{itm.title}</td>
                     <td>{itm.createdAt}</td>
-                    <td><span className={styles.statusCompleted}>{itm.status}</span></td>
-                    <td>{itm.priority}</td>
+                    <td><span className={`${styles.highLight} ${styles.statusCompleted}`}>{itm.status}</span></td>
+                    <td><span className={`${styles.highLight} ${styles[itm.priority]}`}>{itm.priority}</span></td>
                 </tr>
             ))
         }

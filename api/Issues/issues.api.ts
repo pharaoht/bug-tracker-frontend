@@ -10,7 +10,22 @@ const getRecentIssues = async (
     contextSetter: (data: any[]) => void,
     httpRequest: (...args: any) => Promise<any>,
 
-) => {};
+) => {
+
+    const url = window.location.host === 'localhost:3000' 
+    ? 'http://localhost:8000/api/issues'
+    :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues`
+
+    const requestObj = {
+        url: url,
+        method: 'GET',
+
+    }
+
+    await httpRequest({requestConfig: requestObj, callback: contextSetter});
+
+    return undefined;
+};
 
 const getIssuesByStatus = async (
 
@@ -20,11 +35,24 @@ const getIssuesByStatus = async (
 ) => {};
 
 const getIssuesByPriority = async (
-
+    type: string,
     contextSetter: (data: any[]) => void,
     httpRequest: (...args: any) => Promise<any>,
 
-) => {};
+) => {
+
+    const url = window.location.host === 'localhost:3000' 
+    ? `http://localhost:8000/api/issues/priority/${type}`
+    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/priority/${type}`;
+
+
+    const requestConfig = {
+        url:url,
+        method: 'GET',
+    }
+
+    await httpRequest({requestConfig: requestConfig, callback: contextSetter});
+};
 
 const getIssuesByUser = async (
 

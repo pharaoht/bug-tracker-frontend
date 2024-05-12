@@ -50,6 +50,7 @@
     align-items: center;
     grid-gap: 10px;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .headTitle .btnDownload {
@@ -63,4 +64,5 @@
     align-items: center;
     grid-gap: 10px;
     font-weight: 500;
+    cursor: pointer;
 }

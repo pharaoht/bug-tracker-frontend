@@ -4,6 +4,8 @@ interface DashboardContextProviderProps { children: ReactNode }
 interface DashboardContextProps {
     totalIssues: any[];
     setTotalIssuesData: (args: any) => void;
+    urgentIssues: any[];
+    setUrgentIssuesData: (args: any) => void;
 }
 
 const DashboardContext = React.createContext<DashboardContextProps | null>(null)
@@ -12,10 +14,16 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
 
     const [ totalIssues, setTotalIssues ] = useState<any[]>([]);
 
+    const [ urgentIssues, setUrgentIssues ] = useState<any[]>([]);
+
+
     const setTotalIssuesData = ( data: any[] ) => {
-        console.log(data)
         setTotalIssues(data)
     };
+
+    const setUrgentIssuesData = ( data: any[] ) => {
+        setUrgentIssues(data);
+    } 
     
 
     return (
@@ -23,7 +31,9 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
             <DashboardContext.Provider
                 value={{
                     totalIssues,
-                    setTotalIssuesData
+                    setTotalIssuesData,
+                    urgentIssues,
+                    setUrgentIssuesData
                 }}
             >
                 { children }

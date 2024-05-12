@@ -15,6 +15,8 @@ const Sidebar = ({ pageIndex, setPageIndex }: SidebarProps) => {
 
     const userContext = useContext(UserContext);
 
+    const { sendRequest } = useHttp()
+
     const isLoggedIn = userContext?.isLoggedIn || false;
 
     const sideMenuLinks: SideMenuLinksType[] = [
@@ -29,7 +31,7 @@ const Sidebar = ({ pageIndex, setPageIndex }: SidebarProps) => {
     }
 
     const logoutHandler = () => {
-
+        authApi.logout(sendRequest, userContext?.setUserInfo || (()=>{}))
     }
 
     const renderSideMenu = () => (
@@ -42,6 +44,7 @@ const Sidebar = ({ pageIndex, setPageIndex }: SidebarProps) => {
             </li>
         ))
     )
+
 
     return (
         <section className={styles.sidebar}>

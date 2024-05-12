@@ -9,7 +9,19 @@ const login = async ( ) => {
 
 const logout = async (
     httpRequest: (...args: any) => Promise<any>,
+    contextSetter: (...args: any) => void
 ) => {
+
+    const url = 'http://localhost:8000/api/auth/logout';
+
+    const requestConfig = {
+        url:url,
+        method: 'GET',
+        withCredentials: true 
+    }
+
+    await httpRequest({requestConfig: requestConfig, callback: contextSetter});
+    contextSetter([]);
 
 }
 
@@ -38,5 +50,6 @@ const userDetails = async (
 
 export const authApi = {
     login,
+    logout,
     userDetails
 }

@@ -26,7 +26,9 @@ const Navbar = () => {
     const token = typeof window === 'undefined' ? '' : localStorage.getItem('token')
 
     useEffect(() =>{
-        if(token && userProfile.length == 0){
+
+        if(!isLoggedIn){
+                    console.log('hiiiiiiiiiiiiiiiiii')
             userDetails(contextSetterUserProfile, sendRequest)
         }
     }, [token]);

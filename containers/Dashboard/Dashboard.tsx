@@ -8,8 +8,8 @@ import MessageIcon from '@mui/icons-material/Message';
 import UrgentIcon from '@mui/icons-material/Error';
 import MeetingIcon from '@mui/icons-material/Event';
 import useHttp from '@/hooks/useHttp';
-import { dashboardApi } from '@/api/Dashboard/dashboard.api';
 import DashboardContext from '../../context/DashboardContext';
+import { issuesApi } from '@/api/Issues/issues.api';
 
 const breadCrumbProps = { title: 'Dashboard', location: 'Home', }
 
@@ -17,13 +17,14 @@ const Dashboard = () => {
 
     const dashbaordContext = useContext(DashboardContext);
 
-    const { sendRequest } = useHttp();
+    const { isLoading, sendRequest } = useHttp();
 
-    const { getTotalIssues } = dashboardApi;
+    const { getIssuesByPriority, getRecentIssues } = issuesApi;
 
     useEffect(() => {
       Promise.all([
-        getTotalIssues(dashbaordContext?.setTotalIssuesData || (()=>{}), sendRequest),
+        getRecentIssues(dashbaordContext?.setTotalIssuesData || (()=>{}), sendRequest),
+        getIssuesByPriority('high', dashbaordContext?.setUrgentIssuesData || (()=>{}), sendRequest),
 
       ])
 
@@ -50,7 +51,7 @@ const Dashboard = () => {
                   icon={<MessageIcon fontSize="large"/>}
                 />
                 <Widget
-                  value='3'
+                  value={String(dashbaordContext?.urgentIssues.length) || '0'}
                   title='Urgent Issues'
                   color='orange'
                   icon={<UrgentIcon fontSize="large"/>}
