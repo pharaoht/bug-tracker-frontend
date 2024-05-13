@@ -19,6 +19,7 @@ const getRecentIssues = async (
     const requestObj = {
         url: url,
         method: 'GET',
+        withCredentials: true 
 
     }
 
@@ -49,6 +50,7 @@ const getIssuesByPriority = async (
     const requestConfig = {
         url:url,
         method: 'GET',
+                withCredentials: true 
     }
 
     await httpRequest({requestConfig: requestConfig, callback: contextSetter});

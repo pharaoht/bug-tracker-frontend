@@ -28,6 +28,7 @@ const logout = async (
 const userDetails = async (
     contextSetter: (...args: any) => void,
     httpRequest: (...args: any) => Promise<any>,
+    token: string,
 
 ) => {
 
@@ -39,7 +40,10 @@ const userDetails = async (
     const requestConfig = {
         url:url,
         method: 'GET',
-        withCredentials: true 
+        withCredentials: true,
+        headers: {
+            authorization: token
+        }
 
     }
 

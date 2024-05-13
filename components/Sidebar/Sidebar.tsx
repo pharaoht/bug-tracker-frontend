@@ -29,7 +29,6 @@ const Sidebar = ({ pageIndex, setPageIndex }: SidebarProps) => {
     const loginHandler = () => {
         authApi.login()
     }
-
     const logoutHandler = () => {
         authApi.logout(sendRequest, userContext?.setUserInfo || (()=>{}))
     }
@@ -80,6 +79,7 @@ const Sidebar = ({ pageIndex, setPageIndex }: SidebarProps) => {
                         </Link>
                     </li>
                 }
+
             </ul>
         </section>
   )

@@ -15,6 +15,8 @@ const Navbar = () => {
 
     const userProfile = userContext?.userInfo || [];
 
+    const userToken = userContext?.token || '';
+
     const isLoggedIn = userContext?.isLoggedIn || false;
 
     const contextSetterUserProfile = userContext?.setUserInfo || (() => {})
@@ -23,13 +25,19 @@ const Navbar = () => {
 
     const { isLoading, sendRequest } = useHttp()
 
-    const token = typeof window === 'undefined' ? '' : localStorage.getItem('token')
+    const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : '';
+
+    const token = urlParams == '' ? '' : urlParams.get('token');
 
     useEffect(() =>{
 
         if(!isLoggedIn){
-                    console.log('hiiiiiiiiiiiiiiiiii')
-            userDetails(contextSetterUserProfile, sendRequest)
+            const tk = token || userToken
+            userDetails(contextSetterUserProfile, sendRequest, tk)
+        }
+        if (token) {
+
+            localStorage.setItem('token', token);
         }
     }, [token]);
 

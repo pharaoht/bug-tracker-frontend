@@ -8,6 +8,7 @@ interface useHttpType {
         headers?: {};
         body?: {};
         withCredentials?:boolean;
+
     };
     callback: (...args: any) => void;
 }
