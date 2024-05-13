@@ -41,6 +41,9 @@ const Navbar = () => {
         }
     }, [token]);
 
+    console.log(isLoggedIn);
+    console.log(userContext?.userInfo)
+
     return (
         <nav className={styles.nav}>
             <form action="#">

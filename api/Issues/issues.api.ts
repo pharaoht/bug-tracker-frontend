@@ -17,7 +17,7 @@ const getRecentIssues = async (
     :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues`
 
     const requestObj = {
-        url: url,
+        url: `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues`,
         method: 'GET',
         withCredentials: true 
 
@@ -48,9 +48,9 @@ const getIssuesByPriority = async (
 
 
     const requestConfig = {
-        url:url,
+        url:`${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/priority/${type}`,
         method: 'GET',
-                withCredentials: true 
+        withCredentials: true 
     }
 
     await httpRequest({requestConfig: requestConfig, callback: contextSetter});

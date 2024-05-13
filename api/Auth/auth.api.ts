@@ -33,8 +33,8 @@ const userDetails = async (
 ) => {
 
     const url = window.location.host === 'localhost:3000' 
-    ? 'http://localhost:8000/api/users/email'
-    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/users/email`
+    ? 'http://localhost:8000/api/users/id'
+    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/users/id`
 
 
     const requestConfig = {
