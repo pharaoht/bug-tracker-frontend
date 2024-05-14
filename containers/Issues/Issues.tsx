@@ -20,6 +20,7 @@ const Issues = () => {
     return (
         <section className={styles.container}>
             <Breadcrumb
+              openModule={()=> null}
               title={breadCrumbProps.title}
               location={breadCrumbProps.location}
             />
