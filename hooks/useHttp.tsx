@@ -6,7 +6,7 @@ interface useHttpType {
         url: string;
         method?:string;
         headers?: {};
-        body?: {};
+        data?: {};
         withCredentials?:boolean;
 
     };

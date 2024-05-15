@@ -16,6 +16,7 @@ const style = {
   border:'none',
   boxShadow: 24,
   backgroundColor:'#fff',
+  borderRadius:'20px',
   zIndex:'999',
   '@media (max-width: 600px)': { 
       display: 'flex',

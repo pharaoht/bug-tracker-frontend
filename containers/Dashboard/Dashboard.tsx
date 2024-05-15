@@ -12,6 +12,8 @@ import DashboardContext from '../../context/DashboardContext';
 import { issuesApi } from '@/api/Issues/issues.api';
 import Modal from '@/components/Modal/Modal';
 import ContainerModal from '@/components/Modal/Modal';
+import UserContext from '@/context/UserContext';
+import CreateIssue from '@/components/Forms/CreateIssue/CreateIssue';
 
 const breadCrumbProps = { title: 'Dashboard', location: 'Home', }
 
@@ -21,13 +23,20 @@ const Dashboard = () => {
 
     const dashbaordContext = useContext(DashboardContext);
 
+    const userProfileContext = useContext(UserContext);
+
     const { isLoading, sendRequest } = useHttp();
 
     const { getIssuesByPriority, getRecentIssues } = issuesApi;
 
     const createNewIssueHandler = () => {
 
-        
+      if(userProfileContext?.isLoggedIn === false){
+        return alert('You must be logged in')
+      }
+
+      setIsOpen(true)
+
     };
 
     useEffect(() => {
@@ -43,7 +52,7 @@ const Dashboard = () => {
         <section className={styles.container}>
 
             <Breadcrumb
-              openModule={setIsOpen}
+              openModule={createNewIssueHandler}
               title={breadCrumbProps.title}
               location={breadCrumbProps.location}
             />
@@ -83,7 +92,7 @@ const Dashboard = () => {
               data={dashbaordContext?.totalIssues || []}
             />
             <ContainerModal isOpen={isOpen} onClose={()=>null}>
-              <>hi</>
+              <CreateIssue onClose={setIsOpen}/>
             </ContainerModal>
         </section>
     )

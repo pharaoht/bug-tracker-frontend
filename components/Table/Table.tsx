@@ -26,8 +26,6 @@ const Table = ({ data, loadingState }: TablePropTypes) => {
             </tr>
         )
     )
-        
-   
     
     return (
             <div className={styles.tableData}>
@@ -38,7 +36,7 @@ const Table = ({ data, loadingState }: TablePropTypes) => {
                         <i className={styles.bx}>x</i>
                     </div>
                     <table>
-                        <thead>
+                        <thead className={styles.tableHeader}>
                             <tr>
                                 <th>Created by</th>
                                 <th>Title</th>

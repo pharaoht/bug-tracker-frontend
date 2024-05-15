@@ -5,7 +5,7 @@ import Link from 'next/link';
 interface BreadcrumbProps {
     title: string;
     location: string;
-    openModule: (isOpen: boolean) => void;
+    openModule: (...args: any) => void;
 }
 
 const Breadcrumb = ({ title, location, openModule} : BreadcrumbProps) => {
@@ -26,7 +26,7 @@ const Breadcrumb = ({ title, location, openModule} : BreadcrumbProps) => {
 
         <div className={styles.btnHolder}>
             
-            <div className={styles.create} onClick={() => openModule(true)}>
+            <div className={styles.create} onClick={openModule}>
                 <span className={styles.text}>Create Issue</span>
             </div >
 

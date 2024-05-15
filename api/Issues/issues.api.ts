@@ -1,3 +1,5 @@
+const devDomain = 'localhost:3000'
+
 const getIssuesByTeam = async (
 
     contextSetter: (data: any[]) => void,
@@ -12,12 +14,12 @@ const getRecentIssues = async (
 
 ) => {
 
-    const url = window.location.host === 'localhost:3000' 
+    const url = window.location.host === devDomain 
     ? 'http://localhost:8000/api/issues'
     :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues`
 
     const requestObj = {
-        url: `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues`,
+        url: url,
         method: 'GET',
         withCredentials: true 
 
@@ -42,13 +44,13 @@ const getIssuesByPriority = async (
 
 ) => {
 
-    const url = window.location.host === 'localhost:3000' 
+    const url = window.location.host === devDomain
     ? `http://localhost:8000/api/issues/priority/${type}`
     : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/priority/${type}`;
 
 
     const requestConfig = {
-        url:`${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/priority/${type}`,
+        url: url,
         method: 'GET',
         withCredentials: true 
     }
@@ -63,11 +65,36 @@ const getIssuesByUser = async (
 
 ) => {};
 
+const postCreateIssue = async (
+    token: string,
+    postBodyData: {},
+    httpRequest: (...args: any) => Promise<any>
+
+) => {
+
+    const url = window.location.host === devDomain 
+    ? 'http://localhost:8000/api/issues/new' 
+    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/new`
+
+    const requestConfig = {
+        url: url,
+        method: 'POST',
+        withCredentials: true,
+        data: postBodyData,
+        headers: {
+            authorization: token
+        }
+    }
+
+    await httpRequest({ requestConfig: requestConfig, callback: ()=>{}})
+};
+
 
 export const issuesApi = {
     getIssuesByTeam,
     getRecentIssues,
     getIssuesByStatus,
     getIssuesByPriority,
-    getIssuesByUser
+    getIssuesByUser,
+    postCreateIssue
 }

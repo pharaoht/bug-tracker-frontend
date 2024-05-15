@@ -61,20 +61,17 @@ const Navbar = () => {
                 }
             </span>
             { isLoggedIn &&
-            <Link href="#" className={`${styles.notification}`}>
-                
-                <i className={`${styles.bx} ${styles.bellIcon}`}>
-                    <NotificationsIcon/>
-                </i>
-                <span className={`${styles.num}`}>8</span>
-            </Link>
+                <Link href="#" className={styles.notification}>
+                    <i className={`${styles.bx} ${styles.bellIcon}`}>
+                        <NotificationsIcon/>
+                    </i>
+                    <span className={styles.num}>8</span>
+                </Link>
             }
             { isLoggedIn &&
-            <Link href="#" className={`${styles.profile}`}>
-     
+                <Link href="#" className={styles.profile}>
                     <Image src={userProfile[0]?.imageUrl} height={30} width={30} alt='user profile'/>
-                
-            </Link>
+                </Link>
             }
         </nav>
     )

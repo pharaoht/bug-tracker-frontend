@@ -6,13 +6,19 @@
     width: 100%;
     color: var(--dark);
 
+
+}
+
+.tableHeader{
+    
 }
 
 .tableData>div {
     border-radius: 20px;
     background: var(--light);
     padding: 24px;
-    overflow-x: auto;
+    max-height: 50vh;
+    overflow-y: scroll;
 }
 
 .tableData .head {
@@ -35,6 +41,7 @@
 .tableData .order {
     flex-grow: 1;
     flex-basis: 500px;
+
 }
 
 .tableData .order table {
