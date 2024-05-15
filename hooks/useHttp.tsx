@@ -33,7 +33,9 @@ const useHttp = () => {
         }
         catch (err: any) { 
 
-            const resErr = err.response.data.error;
+            const resErr = err?.response?.data.error || undefined;
+
+            console.log('rooor')
 
             if (err instanceof Error) {
                 setError(resErr || err.message || 'Something went wrong');

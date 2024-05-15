@@ -21,10 +21,12 @@ const logout = async (
         method: 'GET',
         withCredentials: true 
     }
-
-    await httpRequest({requestConfig: requestConfig, callback: contextSetter});
     contextSetter([]);
     localStorage.setItem('token', '');
+
+    await httpRequest({requestConfig: requestConfig, callback: ()=>{}});
+
+    window.location.href = '/'
 
 
 }
