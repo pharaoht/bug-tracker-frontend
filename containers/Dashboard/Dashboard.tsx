@@ -10,16 +10,20 @@ import MeetingIcon from '@mui/icons-material/Event';
 import useHttp from '@/hooks/useHttp';
 import DashboardContext from '../../context/DashboardContext';
 import { issuesApi } from '@/api/Issues/issues.api';
-import Modal from '@/components/Modal/Modal';
 import ContainerModal from '@/components/Modal/Modal';
 import UserContext from '@/context/UserContext';
 import CreateIssue from '@/components/Forms/CreateIssue/CreateIssue';
+import ViewIssue from '@/components/Forms/ViewIssue/ViewIssue';
 
 const breadCrumbProps = { title: 'Dashboard', location: 'Home', }
 
 const Dashboard = () => {
 
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
+
+    const [ viewIssueOpen, setViewIssueOpen ] =  useState<boolean>(false);
+
+    const [ selectedIssueData, setSelectedIssueData ] = useState<{}>(false);
 
     const dashbaordContext = useContext(DashboardContext);
 
@@ -47,6 +51,12 @@ const Dashboard = () => {
       ])
 
     }, [])
+
+    useEffect(() => {
+      if(selectedIssueData){
+        setViewIssueOpen(true)
+      }
+    }, [selectedIssueData])
 
     return (
         <section className={styles.container}>
@@ -90,9 +100,16 @@ const Dashboard = () => {
             <Table 
               loadingState={isLoading}
               data={dashbaordContext?.totalIssues || []}
+              setSelectedIssueData={setSelectedIssueData}
             />
             <ContainerModal isOpen={isOpen} onClose={()=>null}>
-              <CreateIssue onClose={setIsOpen}/>
+              <CreateIssue setIsOpen={setIsOpen}/>
+            </ContainerModal>
+            <ContainerModal isOpen={viewIssueOpen} onClose={()=>null}>
+              <ViewIssue 
+                selectedIssueData={selectedIssueData}
+                setIsOpen={setIsOpen}
+              />
             </ContainerModal>
         </section>
     )

@@ -1,7 +1,7 @@
 import { issuesApi } from '@/api/Issues/issues.api';
 import UserContext from '@/context/UserContext';
 import useHttp from '@/hooks/useHttp';
-import React, { ChangeEvent, useContext, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import styles from './createIssue.module.css';
 import Image from 'next/image';
 
@@ -15,7 +15,7 @@ interface formStateType {
 }
 
 interface CreateIssuePropTypes {
-    onClose: (isOpen: boolean) => void;
+    setIsOpen: (isOpen: boolean) => void;
 }
 
 const priorities = [
@@ -24,7 +24,7 @@ const priorities = [
     { displayName: 'High', value: 'high'},
 ]
 
-const CreateIssue = ({ onClose }: CreateIssuePropTypes ) => {
+const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
 
     const userProfileContext = useContext(UserContext);
 
@@ -32,7 +32,7 @@ const CreateIssue = ({ onClose }: CreateIssuePropTypes ) => {
 
     const { postCreateIssue } = issuesApi;
 
-    const { sendRequest } = useHttp();
+    const { isLoading, sendRequest, error } = useHttp();
 
     const [ formState, setFormState ] = useState<formStateType>({
         title: '',
@@ -42,8 +42,6 @@ const CreateIssue = ({ onClose }: CreateIssuePropTypes ) => {
         userId: userProfileContext?.userInfo[0].id,
         teamId: userProfileContext?.userInfo[0].teamId
     });
-
-    const cssName = formState.priority
 
     const formStateKeys = Object.keys(formState);
 
@@ -61,14 +59,16 @@ const CreateIssue = ({ onClose }: CreateIssuePropTypes ) => {
 
     const validateForm = () => {};
 
-
     const onSubmitFormHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
         event.preventDefault()
         if(token == ''){
             return 
         }
         postCreateIssue(token, formState, sendRequest);
+
     };
+
+
 
     const renderSelect = () => (
         <div className={styles.formGroup}>
@@ -76,12 +76,18 @@ const CreateIssue = ({ onClose }: CreateIssuePropTypes ) => {
             <select className={styles[formState.priority]} name={formStateKeys[3]} value={formState.priority} onChange={(event) => onChangeFormHandler(event)}>
                 {
                     priorities.map((itm) => (
-                        <option className={styles.options} value={itm.value}>{itm.displayName}</option>
+                        <option key={itm.value} className={styles.options} value={itm.value}>{itm.displayName}</option>
                     ))
                 }
             </select>
         </div>
     )
+
+    useEffect(() =>{
+        if(error){
+            alert(error)
+        }
+    }, [error])
 
     return (
         <form className={styles.form}>
@@ -90,7 +96,7 @@ const CreateIssue = ({ onClose }: CreateIssuePropTypes ) => {
                     <h1>Create Issue</h1>
                 </div>
                 <div>
-                    <button onClick={() => onClose(false)}>
+                    <button onClick={() => setIsOpen(false)}>
                         X
                     </button>
                 </div>
@@ -110,6 +116,7 @@ const CreateIssue = ({ onClose }: CreateIssuePropTypes ) => {
                     name={formStateKeys[0]} 
                     value={formState.title} 
                     onChange={(event) =>onChangeFormHandler(event)} 
+                    placeholder='Whats the issue? *Required'
                     required 
                 />
             </div>
@@ -120,6 +127,7 @@ const CreateIssue = ({ onClose }: CreateIssuePropTypes ) => {
                     value={formState.description} 
                     onChange={(event) =>onChangeFormHandler(event)} 
                     required 
+                    placeholder='Tell the team more about the issue *Required'
                 ></textarea>
             </div>
             <div className={styles.formGroup}>

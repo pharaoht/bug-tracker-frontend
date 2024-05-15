@@ -68,7 +68,7 @@ const getIssuesByUser = async (
 const postCreateIssue = async (
     token: string,
     postBodyData: {},
-    httpRequest: (...args: any) => Promise<any>
+    httpRequest: (...args: any) => Promise<any>,
 
 ) => {
 

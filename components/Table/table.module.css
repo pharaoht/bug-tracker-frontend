@@ -9,14 +9,10 @@
 
 }
 
-.tableHeader{
-    
-}
-
 .tableData>div {
     border-radius: 20px;
     background: var(--light);
-    padding: 24px;
+    padding: 0px 24px 24px 24px;
     max-height: 50vh;
     overflow-y: scroll;
 }
@@ -25,7 +21,8 @@
     display: flex;
     align-items: center;
     grid-gap: 16px;
-    margin-bottom: 24px;
+    margin-bottom: 14px;
+    padding-top: 24px;
 }
 
 .tableData .head h3 {
@@ -99,6 +96,21 @@
     font-weight: 700;
 }
 
+.table{
+    position: relative;
+}
+
+.tableHeader{
+    position: sticky;
+    top:0;
+    z-index: 1;
+    background-color: var(--light);
+    height: 30px;
+}
+
+.padTop{
+    padding-top: 10px;
+}
 .LOW {
 
     background: var(--blue);

@@ -26,15 +26,17 @@ const useHttp = () => {
             const response = await axios(requestConfig);
 
             if(response.status !== 200){ throw new Error('Request failed') }
-
+            
             callback(response.data);
             setIsLoading(false);
 
         }
-        catch (err) { 
+        catch (err: any) { 
+
+            const resErr = err.response.data.error;
 
             if (err instanceof Error) {
-                setError(err.message || 'Something went wrong');
+                setError(resErr || err.message || 'Something went wrong');
             } 
         }
     };
