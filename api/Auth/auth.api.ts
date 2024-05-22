@@ -22,7 +22,7 @@ const logout = async (
         withCredentials: true 
     }
     contextSetter([]);
-    localStorage.setItem('token', '');
+    localStorage.clear()
 
     await httpRequest({requestConfig: requestConfig, callback: ()=>{}});
 

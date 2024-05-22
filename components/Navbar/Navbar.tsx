@@ -25,21 +25,14 @@ const Navbar = () => {
 
     const { isLoading, sendRequest } = useHttp()
 
-    const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : '';
-
-    const token = urlParams == '' ? '' : urlParams.get('token');
-
     useEffect(() =>{
 
-        if(!isLoggedIn){
-            const tk = token || userToken
+        if(!isLoggedIn && userToken){
+            const tk =  userToken
             userDetails(contextSetterUserProfile, sendRequest, tk)
         }
-        if (token) {
+    }, [ userToken]);
 
-            localStorage.setItem('token', token);
-        }
-    }, [token]);
 
     return (
         <nav className={styles.nav}>

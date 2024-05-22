@@ -6,16 +6,23 @@ import CircularProgress from '@mui/material/CircularProgress';
 interface TablePropTypes {
     data: any[];
     loadingState:boolean;
-    setSelectedIssueData: (issueData: {}) => void;
+    setSelectedIssueData: (...args: any) => void;
+    toggleViewIssueForm: (...args: any) => void;
 }
 
-const Table = ({ data, loadingState, setSelectedIssueData }: TablePropTypes) => {
+const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }: TablePropTypes) => {
 
     const tableData = data || [];
 
     const renderTableRow = () => tableData.map((itm, idx) => 
         (
-            <tr key={itm.id} onClick={() => setSelectedIssueData(itm)}>
+            <tr key={itm.id} 
+                onClick={
+                    () => {
+                        setSelectedIssueData(itm);
+                        toggleViewIssueForm(true);
+                    }
+                }>
                 <td>
                     <Image src={itm.imageUrl} alt={'user_image'} height={25} width={25}/>
                     <p>{itm.createdBy}</p>

@@ -1,5 +1,5 @@
 'use client'
-import React, { ReactNode, Suspense, useState } from 'react';
+import React, { ReactNode, Suspense, useEffect, useState } from 'react';
 
 interface UserContextProviderProps { children: ReactNode }
 interface UserContextProps {
@@ -15,9 +15,27 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
 
     const [ userInfo, setUserInfo ] = useState<any[]>([]);
 
+    const [ token, setUserToken ] = useState('');
+
     const isLoggedIn = userInfo.length > 0 ? true : false;
 
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
+    const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : '';
+
+    const paramValue = urlParams == '' ? '' : urlParams.get('token');
+
+    useEffect(() => {
+
+        if(paramValue){
+            localStorage.setItem('token', paramValue);
+            setUserToken(paramValue);
+        }
+        else if(!paramValue && !token){
+            const storageToken = localStorage.getItem('token');
+            setUserToken(storageToken || '')
+        }
+
+    }, [ paramValue ])
+    
 
     return (
         <Suspense fallback={<>Loading..</>}>

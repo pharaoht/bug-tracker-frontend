@@ -14,8 +14,11 @@ import ContainerModal from '@/components/Modal/Modal';
 import UserContext from '@/context/UserContext';
 import CreateIssue from '@/components/Forms/CreateIssue/CreateIssue';
 import ViewIssue from '@/components/Forms/ViewIssue/ViewIssue';
+import { ViewIssuePropTypes } from '@/types/Dashboard/dashboardType';
 
 const breadCrumbProps = { title: 'Dashboard', location: 'Home', }
+
+const selectedDataObj = { id: '', title: '', description: '', status: '', priority: '', createdAt: '', team: '', teamId: '', userId: '', imageUrl: '', createdBy: '' }
 
 const Dashboard = () => {
 
@@ -23,7 +26,7 @@ const Dashboard = () => {
 
     const [ viewIssueOpen, setViewIssueOpen ] =  useState<boolean>(false);
 
-    const [ selectedIssueData, setSelectedIssueData ] = useState<{}>(false);
+    const [ selectedIssueData, setSelectedIssueData ] = useState<ViewIssuePropTypes>(selectedDataObj);
 
     const dashbaordContext = useContext(DashboardContext);
 
@@ -50,14 +53,10 @@ const Dashboard = () => {
 
       ])
 
-    }, [])
+    }, [ isOpen, viewIssueOpen ]);
 
-    useEffect(() => {
-      if(selectedIssueData){
-        setViewIssueOpen(true)
-      }
-    }, [selectedIssueData])
 
+  
     return (
         <section className={styles.container}>
 
@@ -101,6 +100,7 @@ const Dashboard = () => {
               loadingState={isLoading}
               data={dashbaordContext?.totalIssues || []}
               setSelectedIssueData={setSelectedIssueData}
+              toggleViewIssueForm={setViewIssueOpen}
             />
             <ContainerModal isOpen={isOpen} onClose={()=>null}>
               <CreateIssue setIsOpen={setIsOpen}/>
@@ -108,7 +108,7 @@ const Dashboard = () => {
             <ContainerModal isOpen={viewIssueOpen} onClose={()=>null}>
               <ViewIssue 
                 selectedIssueData={selectedIssueData}
-                setIsOpen={setIsOpen}
+                toggleViewIssueForm={setViewIssueOpen}
               />
             </ContainerModal>
         </section>

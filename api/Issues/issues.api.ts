@@ -69,6 +69,7 @@ const postCreateIssue = async (
     token: string,
     postBodyData: {},
     httpRequest: (...args: any) => Promise<any>,
+    callback: (...args: any ) => void,
 
 ) => {
 
@@ -86,7 +87,7 @@ const postCreateIssue = async (
         }
     }
 
-    await httpRequest({ requestConfig: requestConfig, callback: ()=>{}})
+    await httpRequest({ requestConfig: requestConfig, callback: callback})
 };
 
 

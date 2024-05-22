@@ -59,12 +59,22 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
 
     const validateForm = () => {};
 
-    const onSubmitFormHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
-        event.preventDefault()
+    const onSubmitFormHandler = async ( event: React.MouseEvent<HTMLButtonElement> ) => {
+
+        const responseCallback = (res: { data: string }) => {
+            if(res.data == 'success'){
+                alert('success')
+                setIsOpen(false)
+            }
+        }
+
+        event.preventDefault();
+    
         if(token == ''){
             return 
         }
-        postCreateIssue(token, formState, sendRequest);
+
+        const response = await postCreateIssue(token, formState, sendRequest, responseCallback);
 
     };
 
@@ -96,7 +106,7 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                     <h1>Create Issue</h1>
                 </div>
                 <div>
-                    <button onClick={() => setIsOpen(false)}>
+                    <button type='button' onClick={() => setIsOpen(false)}>
                         X
                     </button>
                 </div>
