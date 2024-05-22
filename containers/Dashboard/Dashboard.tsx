@@ -47,15 +47,17 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-      Promise.all([
-        getRecentIssues(dashbaordContext?.setTotalIssuesData || (()=>{}), sendRequest),
-        getIssuesByPriority('high', dashbaordContext?.setUrgentIssuesData || (()=>{}), sendRequest),
 
-      ])
+      if(viewIssueOpen === false && isOpen === false){
+
+        Promise.all([
+          getRecentIssues(dashbaordContext?.setTotalIssuesData || (()=>{}), sendRequest),
+          getIssuesByPriority('high', dashbaordContext?.setUrgentIssuesData || (()=>{}), sendRequest),
+  
+        ])
+      }
 
     }, [ isOpen, viewIssueOpen ]);
-
-
   
     return (
         <section className={styles.container}>
