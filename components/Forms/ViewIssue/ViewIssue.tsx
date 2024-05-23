@@ -57,7 +57,7 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   const userProfile = userProfileContext?.userInfo[0];
 
-  const { id, name } = userProfile;
+  const { id, name } = userProfile || {};
 
   const formStateKeys = Object.keys(formState);
 
