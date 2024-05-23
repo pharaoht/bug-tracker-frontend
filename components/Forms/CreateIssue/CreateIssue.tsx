@@ -4,6 +4,9 @@ import useHttp from '@/hooks/useHttp';
 import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import styles from './createIssue.module.css';
 import Image from 'next/image';
+import ButtonBtn from '@/components/Inputs/Button/Button';
+import SaveIcon from '@mui/icons-material/Save';
+import TextInput from '@/components/Inputs/TextInput/TextInput';
 
 interface formStateType {
     title: string;
@@ -38,7 +41,7 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
         title: '',
         description:'',
         status:'OPEN',
-        priority:priorities[0].value,
+        priority: priorities[0].value,
         userId: userProfileContext?.userInfo[0].id,
         teamId: userProfileContext?.userInfo[0].teamId
     });
@@ -99,6 +102,7 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
         }
     }, [error])
 
+
     return (
         <form className={styles.form}>
             <div className={styles.headTitle}>
@@ -106,9 +110,13 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                     <h1>Create Issue</h1>
                 </div>
                 <div>
-                    <button type='button' onClick={() => setIsOpen(false)}>
-                        X
-                    </button>
+                    <ButtonBtn
+                        type='button'
+                        onClickHandler={() => setIsOpen(false)}
+                        buttonText='X'
+                        buttonStyleColor='orange'
+                        loadingState={false}
+                    />
                 </div>
             </div>
             <div className={styles.formGroup}>
@@ -119,17 +127,14 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                     <span>Allocated to team: {userProfileContext?.userInfo[0].teamName}</span>
                 </div>
             </div>
-            <div className={styles.formGroup}>
-                <label htmlFor='title'>Title</label>
-                <input 
-                    type="text" 
-                    name={formStateKeys[0]} 
-                    value={formState.title} 
-                    onChange={(event) =>onChangeFormHandler(event)} 
-                    placeholder='Whats the issue? *Required'
-                    required 
-                />
-            </div>
+            <TextInput
+                placeholder='Whats the issue? *Required'
+                inputNameAttribute={formStateKeys[0]} 
+                inputValueAttribute={formState.title} 
+                onChangeHandler={(event) =>onChangeFormHandler(event)} 
+                labelTitle='Title'
+                isRequired={true}
+            />
             <div className={styles.formGroup}>
                 <label htmlFor='description'>Description</label>
                 <textarea 
@@ -150,7 +155,14 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                 />
             </div>
             { renderSelect() }
-            <button onClick={(event) => onSubmitFormHandler(event)}>Create</button>
+            <ButtonBtn 
+                type='submit'
+                buttonStyleColor='green'
+                onClickHandler={(event) => onSubmitFormHandler(event)}
+                buttonText='Create'
+                buttonIcon={<SaveIcon fontSize='small'/>}
+                loadingState={isLoading}
+            />
         </form>
     )
 }

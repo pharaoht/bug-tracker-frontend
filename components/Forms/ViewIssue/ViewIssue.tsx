@@ -1,5 +1,8 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useContext, useState } from 'react';
 import styles from './viewIssue.module.css';
+import ButtonBtn from '@/components/Inputs/Button/Button';
+import TextInput from '@/components/Inputs/TextInput/TextInput';
+import UserContext from '@/context/UserContext';
 
 interface ViewIssuePropTypes {
   selectedIssueData: {
@@ -27,6 +30,14 @@ interface formStateType {
   teamId: string
 }
 
+const status = [
+  { displayName: 'Open', value: 'OPEN'},
+  { displayName: 'In Progress', value: 'IN_PROGRESS'},
+  { displayName: 'Under Review', value: 'UNDER_REVIEW'},
+  { displayName: 'Completed', value: 'COMPLETED'},
+  { displayName: 'Closed', value:'CLOSED'},
+]
+
 const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTypes ) => {
 
   const issueData = selectedIssueData;
@@ -39,6 +50,14 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
     userId: issueData.userId,
     teamId:issueData.teamId,
   });
+
+  const [ isFormDirty, setIsFormDirty ] = useState(false);
+
+  const userProfileContext = useContext(UserContext);
+
+  const userProfile = userProfileContext?.userInfo[0];
+
+  const { id, name } = userProfile;
 
   const formStateKeys = Object.keys(formState);
 
@@ -70,11 +89,23 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
               <h1>Viewing </h1>
           </div>
           <div>
-              <button type='button' onClick={() => onCloseFormHandler()}>
-                  X
-              </button>
+            <ButtonBtn 
+              type='button'
+              onClickHandler={onCloseFormHandler}
+              buttonText='X'
+              buttonStyleColor='orange'
+            />
           </div>
       </div>
+      <TextInput
+        onChangeHandler={(event) => onChangeFormHandler(event)}
+        inputValueAttribute={formState.title}
+        inputNameAttribute={formStateKeys[0]}
+        labelTitle='Title'
+        isRequired={true}
+        placeholder='Whats the issue? *Required'
+        isDisabled={true}
+      />
     </form>
   )
 }

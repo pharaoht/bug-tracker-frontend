@@ -1,0 +1,18 @@
+.headTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-gap: 16px;
+    flex-wrap: wrap;
+}
+
+.headTitle .left h1 {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--dark);
+}
+
+.form {
+    padding: 25px;
+}

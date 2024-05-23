@@ -28,7 +28,6 @@ const useHttp = () => {
             if(response.status !== 200){ throw new Error('Request failed') }
             
             callback(response.data);
-            setIsLoading(false);
 
         }
         catch (err: any) { 
@@ -39,6 +38,8 @@ const useHttp = () => {
                 setError(resErr || err.message || 'Something went wrong');
             } 
         }
+
+        setIsLoading(false);
     };
 
     return {isLoading, error, sendRequest,}
