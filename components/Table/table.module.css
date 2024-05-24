@@ -125,3 +125,23 @@
 
     background: var(--orange);
 }
+
+.OPEN{
+
+    background: var(--blue);
+}
+.UNDER_REVIEW{
+    background: var(--purple);
+}
+
+.IN_PROGRESS{
+    background: var(--yellow);
+}
+
+.COMPLETED{
+    background: var(--green);
+}
+
+.CLOSED{
+    background: var(--brown);
+}

@@ -1,18 +1,18 @@
-import styles from './textInput.module.css';
+import styles from './textArea.module.css';
 
-interface TextInputPropTypes {
+interface TextAreaPropTypes {
     inputNameAttribute: string;
     inputValueAttribute: string;
-    onChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChangeHandler: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     placeholder: string;
     isRequired?: boolean;
     labelTitle: string;
     isDisabled?: boolean;
 }
 
-const TextInput = ({ placeholder, isRequired, onChangeHandler, labelTitle, inputNameAttribute, inputValueAttribute, isDisabled }: TextInputPropTypes) => {
+const TextAreaInput = ({ inputNameAttribute, inputValueAttribute, onChangeHandler, placeholder, isDisabled, isRequired, labelTitle }: TextAreaPropTypes ) => {
 
-   return (
+    return (
         <div className={styles.formGroup}>
             <label 
                 className={styles.labelText}
@@ -20,18 +20,18 @@ const TextInput = ({ placeholder, isRequired, onChangeHandler, labelTitle, input
             >
                 {labelTitle}
             </label>
-            <input
-                className={styles.inputElement}
-                type='text'
+            <textarea
+                className={styles.textArea}
                 name={inputNameAttribute}
                 value={inputValueAttribute}
-                placeholder={placeholder}
-                required={isRequired || true}
-                onChange={(event) => onChangeHandler(event)}
                 disabled={isDisabled || false}
-            />
+                placeholder={placeholder}
+                onChange={(event) => onChangeHandler(event)}
+            >
+
+            </textarea>
         </div>
-   )
+    )
 };
 
-export default TextInput;
+export default TextAreaInput;

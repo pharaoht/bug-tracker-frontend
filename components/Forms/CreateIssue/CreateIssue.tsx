@@ -7,6 +7,7 @@ import Image from 'next/image';
 import ButtonBtn from '@/components/Inputs/Button/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import TextInput from '@/components/Inputs/TextInput/TextInput';
+import TextAreaInput from '@/components/Inputs/TextArea/TextArea';
 
 interface formStateType {
     title: string;
@@ -131,20 +132,19 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                 placeholder='Whats the issue? *Required'
                 inputNameAttribute={formStateKeys[0]} 
                 inputValueAttribute={formState.title} 
-                onChangeHandler={(event) =>onChangeFormHandler(event)} 
+                onChangeHandler={onChangeFormHandler} 
                 labelTitle='Title'
                 isRequired={true}
             />
-            <div className={styles.formGroup}>
-                <label htmlFor='description'>Description</label>
-                <textarea 
-                    name={formStateKeys[1]} 
-                    value={formState.description} 
-                    onChange={(event) =>onChangeFormHandler(event)} 
-                    required 
-                    placeholder='Tell the team more about the issue *Required'
-                ></textarea>
-            </div>
+            <TextAreaInput
+                inputNameAttribute={formStateKeys[1]}
+                inputValueAttribute={formState.description} 
+                onChangeHandler={onChangeFormHandler} 
+                isRequired={true}
+                isDisabled={false}
+                placeholder='Tell the team more about the issue *Required'
+                labelTitle='Description'
+            />
             <div className={styles.formGroup}>
                 <label htmlFor='title'>Status</label>
                 <input 

@@ -90,6 +90,31 @@ const postCreateIssue = async (
     await httpRequest({ requestConfig: requestConfig, callback: callback})
 };
 
+const putUpdateIssue = async (
+    token: string,
+    issueId: string,
+    putBodyData: {},
+    httpRequest: (...args: any) => Promise<any>,
+    callback: (...args: any ) => void,
+
+) => {
+
+    const url = window.location.host === devDomain 
+    ? `http://localhost:8000/api/issues/${issueId}` 
+    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/${issueId}`
+
+    const requestConfig = {
+        url: url,
+        method: 'PUT',
+        withCredentials: true,
+        data: putBodyData,
+        headers: {
+            authorization: token
+        }
+    }
+
+    await httpRequest({ requestConfig: requestConfig, callback: callback})
+}
 
 export const issuesApi = {
     getIssuesByTeam,
@@ -97,5 +122,6 @@ export const issuesApi = {
     getIssuesByStatus,
     getIssuesByPriority,
     getIssuesByUser,
-    postCreateIssue
+    postCreateIssue,
+    putUpdateIssue
 }

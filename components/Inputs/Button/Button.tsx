@@ -9,10 +9,11 @@ interface ButtonBtnPropTypes {
     buttonIcon?: React.ReactNode;
     buttonStyleColor?: 'orange' | 'yellow' | 'blue' | 'green';
     loadingState?: boolean;
+    isDisabled?: boolean;
 }
 
 const ButtonBtn = (
-    { type, onClickHandler, buttonText, buttonIcon, buttonStyleColor, loadingState } : ButtonBtnPropTypes
+    { type, isDisabled, onClickHandler, buttonText, buttonIcon, buttonStyleColor, loadingState } : ButtonBtnPropTypes
 ) => {
 
     const cssBtnColor = styles[buttonStyleColor || ''];
@@ -22,7 +23,7 @@ const ButtonBtn = (
             className={`${styles.buttonSkeleton} ${cssBtnColor}`}
             type={type}
             onClick={onClickHandler}
-            disabled={loadingState || false}
+            disabled={loadingState || isDisabled || false}
         >
             { !loadingState &&
                 buttonIcon &&

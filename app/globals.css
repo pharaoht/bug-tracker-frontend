@@ -37,6 +37,13 @@ li {
   --grey-l-1: #F5F5F5;
   --grey-d-1: #888;
 
+  --purple: #A569BD;
+  --light-purple: #E8DAEF;
+  --brown: #8D6E63;
+  --light-brown: #D7CCC8;
+  --lime-green: #C0E218;
+  --light-lime-green: #F4FCE3;
+
 }
 
 html {
