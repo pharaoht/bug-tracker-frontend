@@ -31,11 +31,26 @@ const getRecentIssues = async (
 };
 
 const getIssuesByStatus = async (
-
+    type: string,
     contextSetter: (data: any[]) => void,
     httpRequest: (...args: any) => Promise<any>,
 
-) => {};
+) => {
+
+    const url = window.location.host === devDomain
+    ? `http://localhost:8000/api/issues/status/${type}`
+    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/status/${type}`;
+
+
+    const requestConfig = {
+        url: url,
+        method: 'GET',
+        withCredentials: true 
+    }
+
+    await httpRequest({requestConfig: requestConfig, callback: contextSetter});
+
+};
 
 const getIssuesByPriority = async (
     type: string,
@@ -90,6 +105,27 @@ const postCreateIssue = async (
     await httpRequest({ requestConfig: requestConfig, callback: callback})
 };
 
+const postExportToPdf = async (
+    postBodyData: {},
+    httpRequest: (...args: any) => Promise<any>,
+    callback: (...args: any ) => void,
+
+) => {
+
+    const url = window.location.host === devDomain 
+    ? 'http://localhost:8000/api/issues/pdf' 
+    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/pdf`
+
+    const requestConfig = {
+        url: url,
+        method: 'POST',
+        withCredentials: true,
+        data: postBodyData,
+    }
+
+    await httpRequest({ requestConfig: requestConfig, callback: callback})
+};
+
 const putUpdateIssue = async (
     token: string,
     issueId: string,
@@ -116,6 +152,31 @@ const putUpdateIssue = async (
     await httpRequest({ requestConfig: requestConfig, callback: callback})
 }
 
+const deleteArchiveIssue =  async (
+    token: string,
+    issueId: string,
+    httpRequest: (...args: any) => Promise<any>,
+    callback: (...args: any ) => void,
+
+) => {
+
+    const url = window.location.host === devDomain 
+    ? `http://localhost:8000/api/issues/${issueId}` 
+    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/${issueId}`
+
+    const requestConfig = {
+        url: url,
+        method: 'DELETE',
+        withCredentials: true,
+        headers: {
+            authorization: token
+        }
+    }
+
+    await httpRequest({ requestConfig: requestConfig, callback: callback})
+
+}
+
 export const issuesApi = {
     getIssuesByTeam,
     getRecentIssues,
@@ -123,5 +184,7 @@ export const issuesApi = {
     getIssuesByPriority,
     getIssuesByUser,
     postCreateIssue,
-    putUpdateIssue
+    putUpdateIssue,
+    postExportToPdf,
+    deleteArchiveIssue,
 }

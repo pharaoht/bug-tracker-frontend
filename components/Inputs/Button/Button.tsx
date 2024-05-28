@@ -7,7 +7,7 @@ interface ButtonBtnPropTypes {
     onClickHandler: (...args: any) => void;
     buttonText: string;
     buttonIcon?: React.ReactNode;
-    buttonStyleColor?: 'orange' | 'yellow' | 'blue' | 'green';
+    buttonStyleColor?: 'orange' | 'yellow' | 'blue' | 'green' | 'red';
     loadingState?: boolean;
     isDisabled?: boolean;
 }

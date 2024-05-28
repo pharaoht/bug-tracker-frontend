@@ -57,6 +57,30 @@
     animation: greenRingAnimation 1s ease-out infinite;
 }
 
+.red {
+    background-color: var(--redd);
+}
+
+.red:focus {
+    outline: 5px solid var(--light-red);
+    animation: redRingAnimation 1s ease-out infinite;
+
+}
+
+@keyframes redRingAnimation {
+    0% {
+        box-shadow: 0 0 0 0 var(--redd);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    }
+}
+
 @keyframes greenRingAnimation {
     0% {
         box-shadow: 0 0 0 0 var(--green);

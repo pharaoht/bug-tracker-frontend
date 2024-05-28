@@ -7,6 +7,7 @@ import TextAreaInput from '@/components/Inputs/TextArea/TextArea';
 import SelectDropDownInput from '@/components/Inputs/DropDown/SelectDropDown';
 import useHttp from '@/hooks/useHttp';
 import { issuesApi } from '@/api/Issues/issues.api';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ViewIssuePropTypes {
   selectedIssueData: {
@@ -54,14 +55,12 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   const issueData = selectedIssueData;
 
-  console.log(issueData.status)
-
   const [ formState, setFormState ] = useState<formStateType>({
     id: issueData.id,
     title: issueData.title,
     description: issueData.description,
     status: issueData.status.toLowerCase().replace(/ /,'_'),
-    priority: issueData.priority,
+    priority: issueData.priority.toLowerCase(),
     userId: issueData.userId,
     teamId:issueData.teamId,
   });
@@ -70,7 +69,9 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   const { isLoading, sendRequest, error } = useHttp();
 
-  const { putUpdateIssue } = issuesApi;
+  const { isLoading: deleteLoading, sendRequest: deleteRequest, error: deleteError } = useHttp();
+
+  const { putUpdateIssue, deleteArchiveIssue } = issuesApi;
 
   const userProfileContext = useContext(UserContext);
 
@@ -111,7 +112,31 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
       }
     }
 
-    const response = await putUpdateIssue(token, id, formState, sendRequest, responseCallback )
+    await putUpdateIssue(token, id, formState, sendRequest, responseCallback )
+  }
+
+  const onDeleteHandler = async ( event: React.MouseEvent<HTMLButtonElement> ) => {
+    
+    event.preventDefault();
+
+    const isConfirmed = window.confirm('Are you sure you want to delete?');
+
+    if (!isConfirmed) return;
+    
+    const id = formState.id;
+
+    const responseCallback = ( res: { data: string }) => {
+
+      if(res.data == 'success'){
+          alert('Deleted Successfully')
+      }
+
+      onCloseFormHandler();
+    }
+
+
+    await deleteArchiveIssue(token, id, deleteRequest, responseCallback );
+
   }
 
   const onCloseFormHandler = () => toggleViewIssueForm(false);
@@ -165,14 +190,25 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
         onChangeHandler={onChangeFormHandler}
         isDisabled={isDisabled}
       />
-      <ButtonBtn 
-        type='button'
-        loadingState={isLoading}
-        onClickHandler={onSubmitFormHandler}
-        buttonText='Update'
-        buttonStyleColor='green'
-        isDisabled={isDisabled}
-      />
+      <div className={styles.btnContainer}>
+        <ButtonBtn 
+          type='button'
+          loadingState={deleteLoading}
+          onClickHandler={onDeleteHandler}
+          buttonText='Delete'
+          buttonStyleColor='red'
+          buttonIcon={<DeleteIcon fontSize="small" />}
+          isDisabled={isDisabled}
+        />
+        <ButtonBtn 
+          type='button'
+          loadingState={isLoading}
+          onClickHandler={onSubmitFormHandler}
+          buttonText='Update'
+          buttonStyleColor='green'
+          isDisabled={isDisabled}
+        />
+      </div>
     </form>
   )
 }

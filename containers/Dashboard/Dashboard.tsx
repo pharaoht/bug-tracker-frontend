@@ -33,8 +33,9 @@ const Dashboard = () => {
     const userProfileContext = useContext(UserContext);
 
     const { isLoading, sendRequest } = useHttp();
+    const { isLoading: pdfLoading, sendRequest: pdfRequest } = useHttp();
 
-    const { getIssuesByPriority, getRecentIssues } = issuesApi;
+    const { getIssuesByPriority, getRecentIssues, postExportToPdf } = issuesApi;
 
     const createNewIssueHandler = () => {
 
@@ -66,6 +67,7 @@ const Dashboard = () => {
               openModule={createNewIssueHandler}
               title={breadCrumbProps.title}
               location={breadCrumbProps.location}
+              pdfOnClick={() => postExportToPdf({}, pdfRequest, ()=>{})}
             />
 
             <ul className={styles.boxInfo}>

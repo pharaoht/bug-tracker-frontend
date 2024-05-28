@@ -8,6 +8,7 @@ import ModuleWrapper from "@/components/ModuleWrapper/ModuleWrapper";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { useState } from "react";
 import { DashboardContextProvider } from "../context/DashboardContext";
+import { IssueContextProvider } from "@/context/IssueContainerContext";
 
 const Home = () => {
 
@@ -24,7 +25,9 @@ const Home = () => {
     },
     { 
       component: () => (
-        <Issues/>
+        <IssueContextProvider>
+          <Issues/>
+        </IssueContextProvider>
       ), 
       key: 'issues' 
     },
@@ -34,6 +37,12 @@ const Home = () => {
       ), 
       key: 'messages' 
     },
+    {
+      component: () => (
+        <Teams />
+      ),
+      key: 'teams'
+    }
   ]
 
 
@@ -47,7 +56,7 @@ const Home = () => {
 
       {
         <ModuleWrapper>
-          { modules[pageIndex].component()}
+          { modules[pageIndex].component() }
         </ModuleWrapper>
       }
     </main>

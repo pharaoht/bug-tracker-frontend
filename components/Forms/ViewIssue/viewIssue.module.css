@@ -16,3 +16,8 @@
 .form {
     padding: 25px;
 }
+
+.btnContainer{
+    display: flex;
+    justify-content: space-between;
+}

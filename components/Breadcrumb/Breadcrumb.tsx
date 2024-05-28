@@ -6,9 +6,10 @@ interface BreadcrumbProps {
     title: string;
     location: string;
     openModule: (...args: any) => void;
+    pdfOnClick?: (...args: any) => void;
 }
 
-const Breadcrumb = ({ title, location, openModule} : BreadcrumbProps) => {
+const Breadcrumb = ({ title, location, openModule, pdfOnClick} : BreadcrumbProps) => {
   return (
     <div className={styles.headTitle}>
         <div className={styles.left}>
@@ -30,7 +31,7 @@ const Breadcrumb = ({ title, location, openModule} : BreadcrumbProps) => {
                 <span className={styles.text}>Create Issue</span>
             </div >
 
-            <div className={styles.btnDownload}>
+            <div className={styles.btnDownload} onClick={pdfOnClick}>
                 <i className='bx bxs-cloud-download' ></i>
                 <span className={styles.text}>Download PDF</span>
             </div>
