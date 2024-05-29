@@ -138,23 +138,25 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                 placeholder='Tell the team more about the issue *Required'
                 labelTitle='Description'
             />
-            <div className={styles.formGroup}>
-                <label htmlFor='title'>Status</label>
-                <input 
-                    type="text" 
-                    name={formStateKeys[2]} 
-                    value={formState.status} 
-                    disabled
+            <div style={{display:'flex', gap:'15px'}}>
+                <div className={styles.formGroup}>
+                    <label htmlFor='title'>Status</label>
+                    <input 
+                        type="text" 
+                        name={formStateKeys[2]} 
+                        value={formState.status} 
+                        disabled
+                    />
+                </div>
+                <SelectDropDownInput
+                    dropDownArray={priorities}
+                    inputNameAttribute={formStateKeys[3]}
+                    inputValueAttribute={formState.priority}
+                    labelTitle='Priority'
+                    onChangeHandler={onChangeFormHandler}
                 />
+                <input type='file' onChange={onChangeFormHandler} />
             </div>
-            <SelectDropDownInput
-                dropDownArray={priorities}
-                inputNameAttribute={formStateKeys[3]}
-                inputValueAttribute={formState.priority}
-                labelTitle='Priority'
-                onChangeHandler={onChangeFormHandler}
-            />
-            <input type='file' onChange={onChangeFormHandler} />
             <ButtonBtn 
                 type='submit'
                 buttonStyleColor='green'

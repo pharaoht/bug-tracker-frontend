@@ -24,7 +24,7 @@ const Dashboard = () => {
 
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
-    const [ viewIssueOpen, setViewIssueOpen ] =  useState<boolean>(false);
+    const [ viewIssueOpen, setViewIssueOpen ] = useState<boolean>(false);
 
     const [ selectedIssueData, setSelectedIssueData ] = useState<ViewIssuePropTypes>(selectedDataObj);
 
@@ -33,17 +33,14 @@ const Dashboard = () => {
     const userProfileContext = useContext(UserContext);
 
     const { isLoading, sendRequest } = useHttp();
-    const { isLoading: pdfLoading, sendRequest: pdfRequest } = useHttp();
 
     const { getIssuesByPriority, getRecentIssues, postExportToPdf } = issuesApi;
 
     const createNewIssueHandler = () => {
 
-      if(userProfileContext?.isLoggedIn === false){
-        return alert('You must be logged in')
-      }
+        if(userProfileContext?.isLoggedIn === false) return alert('You must be logged in')
 
-      setIsOpen(true)
+        setIsOpen(true)
 
     };
 
@@ -51,10 +48,11 @@ const Dashboard = () => {
 
       if(viewIssueOpen === false && isOpen === false){
 
-        Promise.all([
-          getRecentIssues(dashbaordContext?.setTotalIssuesData || (()=>{}), sendRequest),
-          getIssuesByPriority('high', dashbaordContext?.setUrgentIssuesData || (()=>{}), sendRequest),
-  
+          Promise.all([
+            getRecentIssues(dashbaordContext?.setIssues || (()=>{}), sendRequest),
+            getRecentIssues(dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest),
+            getIssuesByPriority('high', dashbaordContext?.setUrgentIssuesData || (()=>{}), sendRequest),
+    
         ])
       }
 
@@ -67,13 +65,13 @@ const Dashboard = () => {
               openModule={createNewIssueHandler}
               title={breadCrumbProps.title}
               location={breadCrumbProps.location}
-              pdfOnClick={() => postExportToPdf({}, pdfRequest, ()=>{})}
+              pdfOnClick={() => {}}
             />
 
             <ul className={styles.boxInfo}>
                 <Widget
                   loadingState={isLoading}
-                  value={String(dashbaordContext?.totalIssues.length) || '0'}
+                  value={String(dashbaordContext?.issueCountTotal) || '0'}
                   title='Total Issues'
                   color='blue'
                   icon={<TicketIcon fontSize="large" />}
@@ -102,7 +100,7 @@ const Dashboard = () => {
             </ul>
             <Table 
               loadingState={isLoading}
-              data={dashbaordContext?.totalIssues || []}
+              data={dashbaordContext?.issues || []}
               setSelectedIssueData={setSelectedIssueData}
               toggleViewIssueForm={setViewIssueOpen}
             />

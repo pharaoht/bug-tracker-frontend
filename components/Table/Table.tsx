@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './table.module.css';
 import Image from 'next/image';
 import CircularProgress from '@mui/material/CircularProgress';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMoreRounded';
 
 interface TablePropTypes {
     data: any[];
@@ -10,9 +12,33 @@ interface TablePropTypes {
     toggleViewIssueForm: (...args: any) => void;
 }
 
+const thLabels = [
+    { id:'a', label: 'Created by'},
+    { id:'b', label: 'Title'},
+    { id:'c', label: 'Date Added'},
+    { id:'f', label: 'Status'},
+    { id:'d', label: 'Priority'},
+
+]
+
 const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }: TablePropTypes) => {
 
     const tableData = data || [];
+
+    const [ activeThColumn, setActiveThColumn ] = useState<number>(2);
+    const [ flip, setFlip ] = useState<boolean>(false);
+
+    const thOnClickHandler = ( columnindex: number ) => {
+
+        if(columnindex == activeThColumn){
+            return setFlip(!flip)
+        }
+        setActiveThColumn(columnindex)
+        setFlip(false);
+
+
+        //add api calls
+    }
 
     const renderTableRow = () => tableData.map((itm, idx) => 
 
@@ -39,6 +65,32 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
             )
         }
     )
+
+    const renderTh = () => thLabels.map((itm, idx) =>
+        {
+            return (
+                <th key={itm.id} 
+                    className={styles.padTop}
+                    onClick={() => thOnClickHandler(idx)}
+                >
+                    <button className={styles.noButton}>
+                        {itm.label}
+                        { activeThColumn === idx &&
+                            <i className={styles.thIcon}>
+                                {
+                                    flip ?
+                                    <ExpandLessIcon fontSize='small'/>
+                                    :
+                                    <ExpandMoreIcon fontSize='small'/>
+                                }
+                                
+                            </i>
+                        }
+                    </button>
+                </th>
+            )
+        }
+    )
     
     return (
             <div className={styles.tableData}>
@@ -51,11 +103,7 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
                     <table className={styles.table}>
                         <thead className={styles.tableHeader}>
                             <tr>
-                                <th className={styles.padTop}>Created by</th>
-                                <th className={styles.padTop}>Title</th>
-                                <th className={styles.padTop}>Date Added</th>
-                                <th className={styles.padTop}>Status</th>
-                                <th className={styles.padTop}>Priority</th>
+                                { renderTh() }
                             </tr>
                         </thead>
                         <tbody>

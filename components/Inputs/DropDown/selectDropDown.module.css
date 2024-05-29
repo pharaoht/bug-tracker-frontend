@@ -11,6 +11,10 @@
     font-size: 1rem;
 }
 
+.formGroup select:focus{
+    outline: 2px solid var(--grey-d-1);
+}
+
 .formGroup select:disabled {
     color: var(--grey-d-1);
     cursor: not-allowed;

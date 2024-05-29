@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import styles from './viewIssue.module.css';
 import ButtonBtn from '@/components/Inputs/Button/Button';
 import TextInput from '@/components/Inputs/TextInput/TextInput';
@@ -8,6 +8,8 @@ import SelectDropDownInput from '@/components/Inputs/DropDown/SelectDropDown';
 import useHttp from '@/hooks/useHttp';
 import { issuesApi } from '@/api/Issues/issues.api';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { issueImagesApi } from '@/api/Images/images.api';
+import Image from 'next/image';
 
 interface ViewIssuePropTypes {
   selectedIssueData: {
@@ -27,7 +29,7 @@ interface ViewIssuePropTypes {
 }
 
 interface formStateType {
-  id:string;
+  id: string;
   title: string;
   description: string;
   status: string;
@@ -65,13 +67,17 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
     teamId:issueData.teamId,
   });
 
-  const [ isFormDirty, setIsFormDirty ] = useState(false);
+  const [ images, setImages ] = useState<any[]>([]);
 
-  const { isLoading, sendRequest, error } = useHttp();
+  const { isLoading: updateIssueLoading, sendRequest: updateIssueRequest, error: updateIssueError } = useHttp();
 
   const { isLoading: deleteLoading, sendRequest: deleteRequest, error: deleteError } = useHttp();
 
+  const { isLoading: imagesLoading, sendRequest: imagesRequest, error: imagesError } = useHttp();
+
   const { putUpdateIssue, deleteArchiveIssue } = issuesApi;
+
+  const { getImagesByIssueId } = issueImagesApi;
 
   const userProfileContext = useContext(UserContext);
 
@@ -112,7 +118,7 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
       }
     }
 
-    await putUpdateIssue(token, id, formState, sendRequest, responseCallback )
+    await putUpdateIssue(token, id, formState, updateIssueRequest, responseCallback )
   }
 
   const onDeleteHandler = async ( event: React.MouseEvent<HTMLButtonElement> ) => {
@@ -140,6 +146,26 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
   }
 
   const onCloseFormHandler = () => toggleViewIssueForm(false);
+
+
+  const renderIssueImages = () => images.map((itm, idx) => (
+    <div>
+      <Image src={itm.url} height={150} width={150} alt='image_issue'/>
+    </div>
+  ))
+
+  useEffect(() => {
+
+      if(formState.id){
+          Promise.all([
+            getImagesByIssueId(formState.id, setImages, imagesRequest)
+          ])
+      }
+
+  }, [formState.id]);
+
+
+  console.log(images)
   
   return (
     <form className={styles.form}>
@@ -174,22 +200,27 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
         isRequired={true}
         labelTitle='Description'
       />
-      <SelectDropDownInput 
-        dropDownArray={status}
-        inputNameAttribute={formStateKeys[3]}
-        inputValueAttribute={formState.status}
-        labelTitle='Status'
-        onChangeHandler={onChangeFormHandler}
-        isDisabled={isDisabled}
-      />
-      <SelectDropDownInput 
-        dropDownArray={priorities}
-        inputNameAttribute={formStateKeys[4]}
-        inputValueAttribute={formState.priority}
-        labelTitle='Priority'
-        onChangeHandler={onChangeFormHandler}
-        isDisabled={isDisabled}
-      />
+      <div style={{display:'flex', gap:'15px'}}>
+        <SelectDropDownInput 
+          dropDownArray={status}
+          inputNameAttribute={formStateKeys[3]}
+          inputValueAttribute={formState.status}
+          labelTitle='Status'
+          onChangeHandler={onChangeFormHandler}
+          isDisabled={isDisabled}
+        />
+        <SelectDropDownInput 
+          dropDownArray={priorities}
+          inputNameAttribute={formStateKeys[4]}
+          inputValueAttribute={formState.priority}
+          labelTitle='Priority'
+          onChangeHandler={onChangeFormHandler}
+          isDisabled={isDisabled}
+        />
+      </div>
+      <div>
+        { images.length > 0 && renderIssueImages() }
+      </div>
       <div className={styles.btnContainer}>
         <ButtonBtn 
           type='button'
@@ -202,7 +233,7 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
         />
         <ButtonBtn 
           type='button'
-          loadingState={isLoading}
+          loadingState={updateIssueLoading}
           onClickHandler={onSubmitFormHandler}
           buttonText='Update'
           buttonStyleColor='green'

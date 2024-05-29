@@ -2,38 +2,49 @@ import React, { ReactNode, Suspense, useState } from 'react';
 
 interface DashboardContextProviderProps { children: ReactNode }
 interface DashboardContextProps {
-    totalIssues: any[];
-    setTotalIssuesData: (args: any) => void;
+    issues: any[];
+    setIssues: (args: any) => void;
     urgentIssues: any[];
     setUrgentIssuesData: (args: any) => void;
+    issueCountTotal: string;
+    setIssueCountTotalFun: (args: any) => void;
 }
 
 const DashboardContext = React.createContext<DashboardContextProps | null>(null)
 
 export const DashboardContextProvider: React.FC<DashboardContextProviderProps> = ({ children }) => {
 
-    const [ totalIssues, setTotalIssues ] = useState<any[]>([]);
+    const [ issues, setIssues ] = useState<any[]>([]);
+
+    const [ issueCountTotal, setIssueCountTotal ] = useState<string>('0');
 
     const [ urgentIssues, setUrgentIssues ] = useState<any[]>([]);
 
 
     const setTotalIssuesData = ( data: any[] ) => {
-        setTotalIssues(data)
+        setIssues(data)
     };
 
     const setUrgentIssuesData = ( data: any[] ) => {
         setUrgentIssues(data);
-    } 
+    };
+
+    const setIssueCountTotalFun = ( data: any[] ) => {
+
+        setIssueCountTotal(data[0].totalCount)
+    }
     
 
     return (
         <Suspense fallback={<>Loading...</>}>
             <DashboardContext.Provider
                 value={{
-                    totalIssues,
-                    setTotalIssuesData,
+                    issues,
+                    setIssues,
                     urgentIssues,
-                    setUrgentIssuesData
+                    setUrgentIssuesData,
+                    issueCountTotal,
+                    setIssueCountTotalFun
                 }}
             >
                 { children }
