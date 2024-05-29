@@ -11,6 +11,7 @@ interface useHttpType {
 
     };
     callback: (...args: any) => void;
+    isMultiPart?: boolean | null;
 }
 
 const useHttp = () => {
@@ -18,12 +19,25 @@ const useHttp = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     
-    const sendRequest = async ({ requestConfig, callback }: useHttpType,) => {
+    const sendRequest = async ({ requestConfig, callback, isMultiPart }: useHttpType,) => {
         setIsLoading(true);
         setError('');
 
+        let response;
+
         try {
-            const response = await axios(requestConfig);
+
+            if(isMultiPart){
+
+                response = await axios.post(requestConfig.url, requestConfig.data, {
+                    headers: requestConfig.headers,
+                    withCredentials: true,
+                });
+            }
+            else {
+                
+                response = await axios(requestConfig);
+            }
 
             if(response.status !== 200){ throw new Error('Request failed') }
             

@@ -8,15 +8,8 @@ import ButtonBtn from '@/components/Inputs/Button/Button';
 import SaveIcon from '@mui/icons-material/Save';
 import TextInput from '@/components/Inputs/TextInput/TextInput';
 import TextAreaInput from '@/components/Inputs/TextArea/TextArea';
-
-interface formStateType {
-    title: string;
-    description: string;
-    status: string;
-    priority: string;
-    userId: string;
-    teamId: string
-}
+import SelectDropDownInput from '@/components/Inputs/DropDown/SelectDropDown';
+import { formStateType } from '@/types/Dashboard/dashboardType';
 
 interface CreateIssuePropTypes {
     setIsOpen: (isOpen: boolean) => void;
@@ -44,12 +37,28 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
         status:'OPEN',
         priority: priorities[0].value,
         userId: userProfileContext?.userInfo[0].id,
-        teamId: userProfileContext?.userInfo[0].teamId
+        teamId: userProfileContext?.userInfo[0].teamId,
+        file: null,
     });
 
     const formStateKeys = Object.keys(formState);
 
     const onChangeFormHandler = ( event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> ) => {
+
+        if( 
+            event.target instanceof HTMLInputElement 
+            && event.target.files 
+            && event.target.files.length > 0
+        ){
+            const selectedFile = event.target.files[0];
+
+            setFormState(prev => ({
+                ...prev,
+                'file': selectedFile
+            }))
+
+            return
+        }
 
         const inputName = event.target.name;
         const inputValue = event.target.value;
@@ -65,6 +74,8 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
 
     const onSubmitFormHandler = async ( event: React.MouseEvent<HTMLButtonElement> ) => {
 
+        event.preventDefault();
+
         const responseCallback = (res: { data: string }) => {
             if(res.data == 'success'){
                 alert('success')
@@ -72,37 +83,19 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
             }
         }
 
-        event.preventDefault();
-    
         if(token == ''){
             return 
         }
 
-        const response = await postCreateIssue(token, formState, sendRequest, responseCallback);
+        await postCreateIssue(token, formState, sendRequest, responseCallback);
 
     };
-
-
-
-    const renderSelect = () => (
-        <div className={styles.formGroup}>
-            <label htmlFor="priority">Priority:</label>
-            <select className={styles[formState.priority]} name={formStateKeys[3]} value={formState.priority} onChange={(event) => onChangeFormHandler(event)}>
-                {
-                    priorities.map((itm) => (
-                        <option key={itm.value} className={styles.options} value={itm.value}>{itm.displayName}</option>
-                    ))
-                }
-            </select>
-        </div>
-    )
 
     useEffect(() =>{
         if(error){
             alert(error)
         }
     }, [error])
-
 
     return (
         <form className={styles.form}>
@@ -149,12 +142,19 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                 <label htmlFor='title'>Status</label>
                 <input 
                     type="text" 
-                    name={formStateKeys[3]} 
+                    name={formStateKeys[2]} 
                     value={formState.status} 
                     disabled
                 />
             </div>
-            { renderSelect() }
+            <SelectDropDownInput
+                dropDownArray={priorities}
+                inputNameAttribute={formStateKeys[3]}
+                inputValueAttribute={formState.priority}
+                labelTitle='Priority'
+                onChangeHandler={onChangeFormHandler}
+            />
+            <input type='file' onChange={onChangeFormHandler} />
             <ButtonBtn 
                 type='submit'
                 buttonStyleColor='green'
@@ -164,6 +164,7 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                 loadingState={isLoading}
             />
         </form>
+
     )
 }
 

@@ -1,3 +1,6 @@
+import { formStateType } from "@/types/Dashboard/dashboardType";
+import axios from "axios";
+
 const devDomain = 'localhost:3000'
 
 const getIssuesByTeam = async (
@@ -82,7 +85,7 @@ const getIssuesByUser = async (
 
 const postCreateIssue = async (
     token: string,
-    postBodyData: {},
+    postBodyData: formStateType,
     httpRequest: (...args: any) => Promise<any>,
     callback: (...args: any ) => void,
 
@@ -92,17 +95,28 @@ const postCreateIssue = async (
     ? 'http://localhost:8000/api/issues/new' 
     : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/new`
 
+    const formData = new FormData();
+
+    formData.append('file', postBodyData.file || '');
+    formData.append('title', postBodyData.title);
+    formData.append('description', postBodyData.description)
+    formData.append('status', postBodyData.status)
+    formData.append('priority', postBodyData.priority)
+    formData.append('userId', postBodyData.userId)
+    formData.append('teamId', postBodyData.teamId)
+
     const requestConfig = {
         url: url,
         method: 'POST',
         withCredentials: true,
-        data: postBodyData,
+        data: formData,
         headers: {
+            'Content-Type': 'multipart/form-data',
             authorization: token
         }
     }
 
-    await httpRequest({ requestConfig: requestConfig, callback: callback})
+    await httpRequest({ requestConfig: requestConfig, callback: callback, isMultiPart: true })
 };
 
 const postExportToPdf = async (

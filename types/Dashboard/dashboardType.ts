@@ -18,5 +18,6 @@ export interface formStateType {
   status: string;
   priority: string;
   userId: string;
-  teamId: string
+  teamId: string;
+  file?: File | null;
 }
