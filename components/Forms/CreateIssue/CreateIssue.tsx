@@ -10,6 +10,7 @@ import TextInput from '@/components/Inputs/TextInput/TextInput';
 import TextAreaInput from '@/components/Inputs/TextArea/TextArea';
 import SelectDropDownInput from '@/components/Inputs/DropDown/SelectDropDown';
 import { formStateType } from '@/types/Dashboard/dashboardType';
+import FileInput from '@/components/Inputs/File/FileInput';
 
 interface CreateIssuePropTypes {
     setIsOpen: (isOpen: boolean) => void;
@@ -138,7 +139,7 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                 placeholder='Tell the team more about the issue *Required'
                 labelTitle='Description'
             />
-            <div style={{display:'flex', gap:'15px'}}>
+            <div className={styles.selectDownHolder}>
                 <div className={styles.formGroup}>
                     <label htmlFor='title'>Status</label>
                     <input 
@@ -155,7 +156,10 @@ const CreateIssue = ({ setIsOpen }: CreateIssuePropTypes ) => {
                     labelTitle='Priority'
                     onChangeHandler={onChangeFormHandler}
                 />
-                <input type='file' onChange={onChangeFormHandler} />
+                <FileInput
+                    label='Photo'
+                    onChangeHandler={onChangeFormHandler}
+                />
             </div>
             <ButtonBtn 
                 type='submit'

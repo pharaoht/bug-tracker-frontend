@@ -62,6 +62,11 @@ label.required::after {
     color: var(--red);
 }
 
+.selectDownHolder{
+    display: flex;
+    gap: 15px;
+}
+
 .options{
     background-color: #fff;
 }

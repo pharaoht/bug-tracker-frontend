@@ -1,0 +1,27 @@
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.formGroup input {
+    width: 100%;
+    border: 1px solid var(--grey-d-1);
+    outline: none;
+    border-radius: .25rem;
+    font-size: 1rem;
+}
+
+.formGroup label {
+    display: inline-block;
+    margin-bottom: .25rem;
+}
+
+.fileInput::-webkit-file-upload-button{
+    background-color: var(--light-blue);
+    height: 45px;
+    border: none;
+    width: 35%;
+}
+
+.formGroup input:focus {
+    outline: 2px solid var(--grey-d-1);
+}
