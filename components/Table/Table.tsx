@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from './table.module.css';
 import Image from 'next/image';
 import CircularProgress from '@mui/material/CircularProgress';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMoreRounded';
+import { Pagination } from '@mui/material';
+import Paginator from '../Paginator/Paginator';
+import { issuesApi } from '@/api/Issues/issues.api';
+import useHttp from '@/hooks/useHttp';
+import DashboardContext from '@/context/DashboardContext';
 
 interface TablePropTypes {
     data: any[];
@@ -13,31 +18,53 @@ interface TablePropTypes {
 }
 
 const thLabels = [
-    { id:'a', label: 'Created by'},
-    { id:'b', label: 'Title'},
-    { id:'c', label: 'Date Added'},
-    { id:'f', label: 'Status'},
-    { id:'d', label: 'Priority'},
+    { id:'user_id', label: 'Created by' },
+    { id:'title', label: 'Title'},
+    { id:'createdAt', label: 'Date Added'},
+    { id:'status', label: 'Status'},
+    { id:'priority', label: 'Priority'},
+];
 
-]
+let count = 0;
 
 const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }: TablePropTypes) => {
 
     const tableData = data || [];
 
     const [ activeThColumn, setActiveThColumn ] = useState<number>(2);
-    const [ flip, setFlip ] = useState<boolean>(false);
+    const [ isAsc, setIsAsc ] = useState<boolean>(false);
 
-    const thOnClickHandler = ( columnindex: number ) => {
+    const hasMounted = useRef(false); 
 
+    const { getSortIssues } = issuesApi;
+
+    const { isLoading, sendRequest, error } = useHttp()
+
+    const dashbaordContext = useContext(DashboardContext);
+
+    const thOnClickHandler = ( columnindex: number ): void => {
+    
+        hasMounted.current = true;
         if(columnindex == activeThColumn){
-            return setFlip(!flip)
+            setIsAsc(!isAsc)
+            return undefined;
         }
-        setActiveThColumn(columnindex)
-        setFlip(false);
 
+        setActiveThColumn(columnindex);
 
-        //add api calls
+        setIsAsc(true);
+
+        return undefined
+    
+    }
+
+    const sortFunction = async () => {
+
+        const direction = isAsc ? 'ASC' : 'DESC';
+
+        const paramsString = `columnType=${thLabels[activeThColumn].id}&sortDirection=${direction}&limit=10&offset=0`;
+
+        return await getSortIssues(paramsString, dashbaordContext?.setIssues || (()=>{}), sendRequest)
     }
 
     const renderTableRow = () => tableData.map((itm, idx) => 
@@ -78,10 +105,10 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
                         { activeThColumn === idx &&
                             <i className={styles.thIcon}>
                                 {
-                                    flip ?
-                                    <ExpandLessIcon fontSize='small'/>
-                                    :
+                                    isAsc ?
                                     <ExpandMoreIcon fontSize='small'/>
+                                    :
+                                    <ExpandLessIcon fontSize='small'/>
                                 }
                                 
                             </i>
@@ -91,14 +118,21 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
             )
         }
     )
+
+    useEffect(() => {
+
+        if (hasMounted.current) {
+            sortFunction();
+        } 
+
+    }, [ activeThColumn, isAsc ])
     
     return (
             <div className={styles.tableData}>
                 <div className={styles.order}>
                     <div className={styles.head}>
-                        <h3>Recent Tickets</h3>
-                        <i className={styles.bx} >v</i>
-                        <i className={styles.bx}>x</i>
+                        <h3>Recent Tickets <span style={{fontSize:'10px'}}><em>(10 per page)</em></span></h3>
+                        <Paginator />
                     </div>
                     <table className={styles.table}>
                         <thead className={styles.tableHeader}>
@@ -110,7 +144,7 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
                             { tableData.length > 0 ? 
                                 renderTableRow() 
                             : 
-                                ( loadingState ? <tr><td><CircularProgress/></td></tr> : <tr><td><span>No Issues</span></td></tr>)
+                                ( loadingState || isLoading   ? <tr><td><CircularProgress/></td></tr> : <tr><td><span>No Issues</span></td></tr>)
                             }
                         </tbody>
                     </table>

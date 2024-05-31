@@ -32,6 +32,27 @@ const getRecentIssues = async (
     return undefined;
 };
 
+const getSortIssues = async (
+
+    params: string,
+    contextSetter: (data: any[]) => void,
+    httpRequest: (...args: any) => Promise<any>,
+
+) => {
+
+    const url = window.location.host === devDomain
+    ? `http://localhost:8000/api/issues/sort?${params}`
+    : `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/sort?${params}`;
+
+    const requestConfig = {
+        url: url,
+        method: 'GET',
+        withCredentials: true 
+    }
+
+    await httpRequest({requestConfig: requestConfig, callback: contextSetter});
+}
+
 const getIssuesByStatus = async (
     type: string,
     contextSetter: (data: any[]) => void,
@@ -200,4 +221,5 @@ export const issuesApi = {
     putUpdateIssue,
     postExportToPdf,
     deleteArchiveIssue,
+    getSortIssues
 }
