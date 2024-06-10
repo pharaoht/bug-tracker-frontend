@@ -46,6 +46,11 @@ li {
   --lime-green: #C0E218;
   --light-lime-green: #F4FCE3;
 
+  --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  --border-radius: 8px;
+  --font-size-large: 1.5em;
+  --font-size-medium: 1.2em;
+
 }
 
 html {

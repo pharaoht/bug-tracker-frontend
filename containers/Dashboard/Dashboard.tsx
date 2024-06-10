@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import styles from './dashboard.module.css';
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import Widget from '@/components/Widget/Widget';
@@ -30,11 +30,12 @@ const Dashboard = () => {
 
     const dashbaordContext = useContext(DashboardContext);
 
+
     const userProfileContext = useContext(UserContext);
 
-    const { isLoading, sendRequest } = useHttp();
+    const { isLoading, sendRequest, error } = useHttp();
 
-    const { getIssuesByPriority, getRecentIssues, postExportToPdf } = issuesApi;
+    const { getIssuesByPriority, getRecentIssues, getSortIssues } = issuesApi;
 
     const createNewIssueHandler = () => {
 
@@ -44,19 +45,31 @@ const Dashboard = () => {
 
     };
 
+    const sortFunction = async () => {
+
+        return await getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sendRequest)
+    }
+
     useEffect(() => {
 
       if(viewIssueOpen === false && isOpen === false){
 
           Promise.all([
-            getRecentIssues(dashbaordContext?.setIssues || (()=>{}), sendRequest),
+            getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sendRequest),
             getRecentIssues(dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest),
             getIssuesByPriority('high', dashbaordContext?.setUrgentIssuesData || (()=>{}), sendRequest),
     
         ])
+
       }
 
     }, [ isOpen, viewIssueOpen ]);
+
+    useEffect(() => {
+
+        sortFunction()
+                  getRecentIssues(dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest)
+    }, [dashbaordContext?.queryParams])
   
     return (
         <section className={styles.container}>

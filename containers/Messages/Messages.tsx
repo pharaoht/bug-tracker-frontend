@@ -1,8 +1,11 @@
+import UserProfile from '@/components/UserProfile/UserProfile';
 import React from 'react'
 
 const Messages = () => {
   return (
-    <div>Messages</div>
+    <div>
+      <UserProfile/>
+    </div>
   )
 }
 

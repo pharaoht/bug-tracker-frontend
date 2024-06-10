@@ -10,6 +10,7 @@ import { issuesApi } from '@/api/Issues/issues.api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { issueImagesApi } from '@/api/Images/images.api';
 import Image from 'next/image';
+import { commentApi } from '@/api/Comments/comments.ap';
 
 interface ViewIssuePropTypes {
   selectedIssueData: {
@@ -67,6 +68,8 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
     teamId:issueData.teamId,
   });
 
+  const [ comments, setComments ] = useState<any[]>([]);
+
   const [ images, setImages ] = useState<any[]>([]);
 
   const { isLoading: updateIssueLoading, sendRequest: updateIssueRequest, error: updateIssueError } = useHttp();
@@ -75,9 +78,13 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   const { isLoading: imagesLoading, sendRequest: imagesRequest, error: imagesError } = useHttp();
 
+  const { isLoading: commentLoading, sendRequest: commentRequest, error: commentError } = useHttp();
+
   const { putUpdateIssue, deleteArchiveIssue } = issuesApi;
 
   const { getImagesByIssueId } = issueImagesApi;
+
+  const { getCommentsByIssueId } = commentApi;
 
   const userProfileContext = useContext(UserContext);
 
@@ -150,7 +157,9 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   const renderIssueImages = () => images.map((itm, idx) => (
     <div>
-      <Image src={itm.url} height={150} width={150} alt='image_issue'/>
+      {
+        imagesLoading ? 'Loading' : <Image src={itm.url} height={150} width={150} alt='image_issue'/>
+      }
     </div>
   ))
 
@@ -158,15 +167,14 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
       if(formState.id){
           Promise.all([
-            getImagesByIssueId(formState.id, setImages, imagesRequest)
+            getImagesByIssueId(formState.id, setImages, imagesRequest),
+            getCommentsByIssueId(formState.id, setComments, commentRequest)
           ])
       }
 
   }, [formState.id]);
 
 
-  console.log(images)
-  
   return (
     <form className={styles.form}>
       <div className={styles.headTitle}>

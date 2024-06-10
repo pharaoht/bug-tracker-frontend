@@ -1,4 +1,5 @@
 import React, { ReactNode, Suspense, useState } from 'react';
+import { thLabels, sortDirection } from '@/constants/costants';
 
 interface DashboardContextProviderProps { children: ReactNode }
 interface DashboardContextProps {
@@ -8,6 +9,20 @@ interface DashboardContextProps {
     setUrgentIssuesData: (args: any) => void;
     issueCountTotal: string;
     setIssueCountTotalFun: (args: any) => void;
+    queryParams: QueryParamTypes;
+    setQueryParamsFunc: ( keyName: string, value: any ) => void;
+    paramString: string;
+    pagination: {
+        pageTotal: number;
+        currentPage: number;
+    }
+}
+
+interface QueryParamTypes {
+    limit: string,
+    offset: string,
+    sortDirection: number,
+    columnType: number;
 }
 
 const DashboardContext = React.createContext<DashboardContextProps | null>(null)
@@ -20,10 +35,32 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
 
     const [ urgentIssues, setUrgentIssues ] = useState<any[]>([]);
 
+    const [ pagination, setPagination ] = useState({
+        pageTotal:1,
+        currentPage:1
+    });
 
-    const setTotalIssuesData = ( data: any[] ) => {
-        setIssues(data)
-    };
+    const [ queryParams, setQueryParams ] = useState<QueryParamTypes>({
+        limit: '10',
+        offset: '0',
+        sortDirection: 0,
+        columnType: 2
+    });
+
+    const generateQueryString = (): string => {
+
+        const queryParamsRecord: Record<string, string> = {
+            limit: queryParams.limit,
+            offset: queryParams.offset,
+            sortDirection: sortDirection[queryParams.sortDirection],
+            columnType: thLabels[queryParams.columnType].id,
+        };
+    
+        const params = new URLSearchParams(queryParamsRecord).toString();
+        return params;
+    }
+
+    const paramString = generateQueryString();
 
     const setUrgentIssuesData = ( data: any[] ) => {
         setUrgentIssues(data);
@@ -31,8 +68,24 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
 
     const setIssueCountTotalFun = ( data: any[] ) => {
 
-        setIssueCountTotal(data[0].totalCount)
+        setPagination({
+            pageTotal: data[0].totalPages,
+            currentPage: data[0].currentPage
+        })
+
+        setIssueCountTotal(data[0].totalCount);
+
     }
+
+    const setQueryParamsFunc = ( keyName: string , value: any ): void => {
+
+        setQueryParams(prev => ({
+            ...prev,
+            [keyName]: value
+        }));
+
+        return undefined;
+    };
     
 
     return (
@@ -44,7 +97,11 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
                     urgentIssues,
                     setUrgentIssuesData,
                     issueCountTotal,
-                    setIssueCountTotalFun
+                    setIssueCountTotalFun,
+                    queryParams,
+                    setQueryParamsFunc,
+                    paramString,
+                    pagination
                 }}
             >
                 { children }

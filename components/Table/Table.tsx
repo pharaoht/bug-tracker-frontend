@@ -4,11 +4,11 @@ import Image from 'next/image';
 import CircularProgress from '@mui/material/CircularProgress';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMoreRounded';
-import { Pagination } from '@mui/material';
 import Paginator from '../Paginator/Paginator';
 import { issuesApi } from '@/api/Issues/issues.api';
 import useHttp from '@/hooks/useHttp';
 import DashboardContext from '@/context/DashboardContext';
+import { thLabels } from '@/constants/costants';
 
 interface TablePropTypes {
     data: any[];
@@ -16,16 +16,6 @@ interface TablePropTypes {
     setSelectedIssueData: (...args: any) => void;
     toggleViewIssueForm: (...args: any) => void;
 }
-
-const thLabels = [
-    { id:'user_id', label: 'Created by' },
-    { id:'title', label: 'Title'},
-    { id:'createdAt', label: 'Date Added'},
-    { id:'status', label: 'Status'},
-    { id:'priority', label: 'Priority'},
-];
-
-let count = 0;
 
 const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }: TablePropTypes) => {
 
@@ -45,26 +35,25 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
     const thOnClickHandler = ( columnindex: number ): void => {
     
         hasMounted.current = true;
+
         if(columnindex == activeThColumn){
+
+            const value = dashbaordContext?.queryParams.sortDirection === 0 ? 1 : 0;
+            dashbaordContext?.setQueryParamsFunc('sortDirection', value)
             setIsAsc(!isAsc)
             return undefined;
         }
 
-        setActiveThColumn(columnindex);
+        dashbaordContext?.setQueryParamsFunc('columnType', columnindex);
+        setActiveThColumn(columnindex)
 
-        setIsAsc(true);
-
-        return undefined
+        return undefined;
     
     }
 
     const sortFunction = async () => {
 
-        const direction = isAsc ? 'ASC' : 'DESC';
-
-        const paramsString = `columnType=${thLabels[activeThColumn].id}&sortDirection=${direction}&limit=10&offset=0`;
-
-        return await getSortIssues(paramsString, dashbaordContext?.setIssues || (()=>{}), sendRequest)
+        return await getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sendRequest)
     }
 
     const renderTableRow = () => tableData.map((itm, idx) => 
@@ -119,13 +108,6 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
         }
     )
 
-    useEffect(() => {
-
-        if (hasMounted.current) {
-            sortFunction();
-        } 
-
-    }, [ activeThColumn, isAsc ])
     
     return (
             <div className={styles.tableData}>
