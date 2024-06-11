@@ -13,6 +13,26 @@
     color: var(--dark);
 }
 
+.detailsContainer{
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    height: 270px;
+}
+
+.detailsChld{
+    width: 40%;
+    display: grid;
+    gap:10px;
+    grid-template-columns: repeat(2, 1fr);
+    height: 270px;
+}
+
+.detailsChildTwo{
+    width: 60%;
+}
+
 .form {
     padding: 25px;
 }
@@ -21,3 +41,4 @@
     display: flex;
     justify-content: space-between;
 }
+

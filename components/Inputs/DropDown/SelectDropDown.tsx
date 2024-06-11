@@ -12,14 +12,17 @@ interface SelectDropDownInputPropTypes {
     dropDownArray: DropdownItem[ ];
     onChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     isDisabled?: boolean;
+    margin?: boolean;
 }
 
-const SelectDropDownInput = ({ isDisabled, onChangeHandler, inputValueAttribute, inputNameAttribute, labelTitle, dropDownArray } : SelectDropDownInputPropTypes) => {
+const SelectDropDownInput = ({ isDisabled, onChangeHandler, inputValueAttribute, inputNameAttribute, labelTitle, dropDownArray, margin } : SelectDropDownInputPropTypes) => {
     
     const lowerCase = inputValueAttribute.toLowerCase();
 
+    const bottomMargin = margin ? styles.noMargin : styles.margin;
+
     return (
-        <div className={styles.formGroup}>
+        <div className={`${styles.formGroup} ${bottomMargin}`}>
             <label htmlFor={inputNameAttribute}>{labelTitle}</label>
             <select 
                 className={styles[lowerCase]}

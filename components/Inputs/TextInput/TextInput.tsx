@@ -8,12 +8,15 @@ interface TextInputPropTypes {
     isRequired?: boolean;
     labelTitle: string;
     isDisabled?: boolean;
+    margin?: boolean;
 }
 
-const TextInput = ({ placeholder, isRequired, onChangeHandler, labelTitle, inputNameAttribute, inputValueAttribute, isDisabled }: TextInputPropTypes) => {
+const TextInput = ({ placeholder, isRequired, onChangeHandler, labelTitle, inputNameAttribute, inputValueAttribute, isDisabled, margin }: TextInputPropTypes) => {
+
+   const bottomMargin = margin ? styles.noMargin : styles.margin;
 
    return (
-        <div className={styles.formGroup}>
+        <div className={`${styles.formGroup} ${bottomMargin}`}>
             <label 
                 className={styles.labelText}
                 htmlFor={inputNameAttribute}

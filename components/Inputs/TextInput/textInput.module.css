@@ -1,5 +1,5 @@
 .formGroup {
-    margin-bottom: 1.5rem;
+
 }
  
 .formGroup input{
@@ -28,4 +28,12 @@
 
 .formGroup input:focus {
     outline: 2px solid var(--grey-d-1);
+}
+
+.noMargin {
+    margin-bottom: none !important;
+}
+
+.margin {
+    margin-bottom: 1.5rem;
 }

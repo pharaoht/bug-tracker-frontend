@@ -10,7 +10,8 @@ import { issuesApi } from '@/api/Issues/issues.api';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { issueImagesApi } from '@/api/Images/images.api';
 import Image from 'next/image';
-import { commentApi } from '@/api/Comments/comments.ap';
+import { commentApi } from '@/api/Comments/comments.api';
+import CommentBoard from '@/components/Comment/CommentBoard';
 
 interface ViewIssuePropTypes {
   selectedIssueData: {
@@ -158,7 +159,7 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
   const renderIssueImages = () => images.map((itm, idx) => (
     <div>
       {
-        imagesLoading ? 'Loading' : <Image src={itm.url} height={150} width={150} alt='image_issue'/>
+        imagesLoading ? 'Loading' : <Image key={itm.url} src={itm.url} height={150} width={150} alt='image_issue'/>
       }
     </div>
   ))
@@ -177,67 +178,78 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   return (
     <form className={styles.form}>
-      <div className={styles.headTitle}>
-          <div className={styles.left}>
-              <h1>{formState.title}</h1>
-          </div>
-          <div>
-            <ButtonBtn 
-              type='button'
-              onClickHandler={onCloseFormHandler}
-              buttonText='X'
-              buttonStyleColor='orange'
-            />
-          </div>
-      </div>
+        <div className={styles.headTitle}>
+            <div className={styles.left}>
+                <h1>{formState.title}</h1>
+            </div>
+            <div>
+                <ButtonBtn 
+                    type='button'
+                    onClickHandler={onCloseFormHandler}
+                    buttonText='X'
+                    buttonStyleColor='orange'
+                />
+            </div>
+        </div>
       <TextInput
-        onChangeHandler={(event) => onChangeFormHandler(event)}
-        inputNameAttribute={formStateKeys[1]}
-        inputValueAttribute={formState.title}
-        labelTitle='Title'
-        isRequired={true}
-        placeholder='Whats the issue? *Required'
-        isDisabled={isDisabled}
+            onChangeHandler={(event) => onChangeFormHandler(event)}
+            inputNameAttribute={formStateKeys[1]}
+            inputValueAttribute={formState.title}
+            labelTitle='Title'
+            isRequired={true}
+            placeholder='Whats the issue? *Required'
+            isDisabled={isDisabled}
       />
       <TextAreaInput
-        onChangeHandler={onChangeFormHandler}
-        inputNameAttribute={formStateKeys[2]}
-        inputValueAttribute={formState.description}
-        placeholder=''
-        isDisabled={isDisabled}
-        isRequired={true}
-        labelTitle='Description'
+            onChangeHandler={onChangeFormHandler}
+            inputNameAttribute={formStateKeys[2]}
+            inputValueAttribute={formState.description}
+            placeholder=''
+            isDisabled={isDisabled}
+            isRequired={true}
+            labelTitle='Description'
       />
-      <div style={{display:'flex', gap:'15px'}}>
-        <SelectDropDownInput 
-          dropDownArray={status}
-          inputNameAttribute={formStateKeys[3]}
-          inputValueAttribute={formState.status}
-          labelTitle='Status'
-          onChangeHandler={onChangeFormHandler}
-          isDisabled={isDisabled}
-        />
-        <SelectDropDownInput 
-          dropDownArray={priorities}
-          inputNameAttribute={formStateKeys[4]}
-          inputValueAttribute={formState.priority}
-          labelTitle='Priority'
-          onChangeHandler={onChangeFormHandler}
-          isDisabled={isDisabled}
-        />
-      </div>
-      <div>
-        { images.length > 0 && renderIssueImages() }
-      </div>
+        <div className={styles.detailsContainer}>
+
+            <div className={styles.detailsChld}>
+                <SelectDropDownInput 
+                    dropDownArray={status}
+                    inputNameAttribute={formStateKeys[3]}
+                    inputValueAttribute={formState.status}
+                    labelTitle='Status'
+                    onChangeHandler={onChangeFormHandler}
+                    isDisabled={isDisabled}
+                    margin={true}
+                />
+                <SelectDropDownInput 
+                    dropDownArray={priorities}
+                    inputNameAttribute={formStateKeys[4]}
+                    inputValueAttribute={formState.priority}
+                    labelTitle='Priority'
+                    onChangeHandler={onChangeFormHandler}
+                    isDisabled={isDisabled}
+                    margin={true}
+                />
+
+            { images.length > 0 && renderIssueImages() }
+            
+            </div>
+            <div className={styles.detailsChildTwo}>
+                <CommentBoard
+                    commentData={comments}
+                    isLoading={commentLoading}
+                />
+            </div>
+        </div>
       <div className={styles.btnContainer}>
         <ButtonBtn 
-          type='button'
-          loadingState={deleteLoading}
-          onClickHandler={onDeleteHandler}
-          buttonText='Delete'
-          buttonStyleColor='red'
-          buttonIcon={<DeleteIcon fontSize="small" />}
-          isDisabled={isDisabled}
+            type='button'
+            loadingState={deleteLoading}
+            onClickHandler={onDeleteHandler}
+            buttonText='Delete'
+            buttonStyleColor='red'
+            buttonIcon={<DeleteIcon fontSize="small" />}
+            isDisabled={isDisabled}
         />
         <ButtonBtn 
           type='button'

@@ -1,4 +1,12 @@
 .formGroup {
+   border: none;
+}
+
+.noMargin{
+    margin-bottom: none !important;
+}
+
+.margin{
     margin-bottom: 1.5rem;
 }
 

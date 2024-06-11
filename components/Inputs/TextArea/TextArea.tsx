@@ -8,9 +8,12 @@ interface TextAreaPropTypes {
     isRequired?: boolean;
     labelTitle: string;
     isDisabled?: boolean;
+    margin?: boolean;
 }
 
-const TextAreaInput = ({ inputNameAttribute, inputValueAttribute, onChangeHandler, placeholder, isDisabled, isRequired, labelTitle }: TextAreaPropTypes ) => {
+const TextAreaInput = ({ inputNameAttribute, inputValueAttribute, onChangeHandler, placeholder, isDisabled, isRequired, labelTitle, margin }: TextAreaPropTypes ) => {
+
+    const bottomMargin = margin ? styles.noMargin : styles.margin;
 
     return (
         <div className={styles.formGroup}>
