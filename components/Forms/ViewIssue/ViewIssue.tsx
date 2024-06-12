@@ -89,11 +89,13 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   const userProfileContext = useContext(UserContext);
 
-  const userProfile = userProfileContext?.userInfo[0];
+  const userProfile = userProfileContext?.userInfo && userProfileContext?.userInfo[0] || {}
 
   const token = userProfileContext?.token || '';
 
   const { id, name } = userProfile || {};
+
+  const isLoggedIn = Object.keys(userProfile).length > 0 ? true : false
 
   const isDisabled = id == issueData.userId ? false : true;
 
@@ -157,11 +159,11 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
 
   const renderIssueImages = () => images.map((itm, idx) => (
-    <div>
-      {
-        imagesLoading ? 'Loading' : <Image key={itm.url} src={itm.url} height={150} width={150} alt='image_issue'/>
-      }
-    </div>
+        <div key={itm.url}>
+            {
+                imagesLoading ? 'Loading' : <Image key={itm.url} src={itm.url} height={150} width={150} alt='image_issue'/>
+            }
+        </div>
   ))
 
   useEffect(() => {
@@ -175,7 +177,7 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   }, [formState.id]);
 
-
+  console.log(isLoggedIn)
   return (
     <form className={styles.form}>
         <div className={styles.headTitle}>
@@ -238,6 +240,12 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
                 <CommentBoard
                     commentData={comments}
                     isLoading={commentLoading}
+                    isLoggedIn={isLoggedIn}
+                    userId={id}
+                    issueId={formState.id}
+                    token={token}
+                    setComments={setComments}
+                    commentRequest={commentRequest}
                 />
             </div>
         </div>

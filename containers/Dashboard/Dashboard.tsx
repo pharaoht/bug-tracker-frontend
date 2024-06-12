@@ -68,7 +68,8 @@ const Dashboard = () => {
     useEffect(() => {
 
         sortFunction()
-                  getRecentIssues(dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest)
+        getRecentIssues(dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest)
+    
     }, [dashbaordContext?.queryParams])
   
     return (

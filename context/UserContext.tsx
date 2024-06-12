@@ -17,7 +17,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({ childr
 
     const [ token, setUserToken ] = useState('');
 
-    const isLoggedIn = userInfo.length > 0 ? true : false;
+    const isLoggedIn = userInfo?.length > 0 ? true : false;
 
     const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : '';
 

@@ -47,10 +47,15 @@ const useHttp = () => {
         catch (err: any) { 
 
             const resErr = err?.response?.data.error || undefined;
-
+            
             if (err instanceof Error) {
                 setError(resErr || err.message || 'Something went wrong');
             } 
+
+            if(callback){
+                callback(resErr);
+            }
+
         }
 
         setIsLoading(false);

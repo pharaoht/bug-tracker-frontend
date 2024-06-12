@@ -3,7 +3,9 @@ import ButtonBtn from '../Inputs/Button/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextInput from '../Inputs/TextInput/TextInput';
 import styles from './commentBoard.module.css';
-import { EditLocationRounded } from '@mui/icons-material';
+import { ChangeEvent, useState, useRef, useEffect } from 'react';
+import { commentApi } from '@/api/Comments/comments.api';
+import useHttp from '@/hooks/useHttp';
 
 interface CommentData {
     id: number,
@@ -18,10 +20,51 @@ interface CommentData {
 
 interface CommentBoardProps {
     commentData: CommentData[];
-    isLoading:boolean;
+    isLoading: boolean;
+    isLoggedIn :boolean;
+    userId: string;
+    issueId: string;
+    token: string;
+    setComments: (...args: any) => void;
+    commentRequest: (...args: any) => any;
 }
 
-const CommentBoard = ( { commentData, isLoading }: CommentBoardProps) => {
+const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, token, setComments , commentRequest }: CommentBoardProps) => {
+
+    const [ inputValue, setInputValue ] = useState<string>('');
+
+    const { postCreateCommentToIssueId, getCommentsByIssueId } = commentApi;
+
+    const { isLoading: postLoading, sendRequest, error } = useHttp();
+
+    const isValid = inputValue == '' ? true : false;
+
+    const onChangeHandler = ( event: ChangeEvent<HTMLInputElement> ) => setInputValue(event.target.value);
+
+    const onSubmitHandler =  async ( event: React.MouseEvent<HTMLButtonElement> ) => {
+
+        event.preventDefault();
+
+        const postBody = {
+            comment: inputValue,
+            userId: userId,
+            issueId: issueId
+        };
+
+        const callbackFunc = ( result: any ) => {
+
+            if(result?.data == 'success'){
+               setInputValue('');
+               getCommentsByIssueId(issueId, setComments, commentRequest)
+               alert('success')
+            }
+            if(typeof result === 'string'){
+                alert(result)
+            }
+        }
+
+        await postCreateCommentToIssueId(token, postBody, sendRequest, callbackFunc);
+    };
 
     const renderComments = () => (
 
@@ -46,7 +89,7 @@ const CommentBoard = ( { commentData, isLoading }: CommentBoardProps) => {
                 ))
             }
         </div>
-    )
+    );
 
     return (
         <div className={styles.container}>
@@ -63,31 +106,38 @@ const CommentBoard = ( { commentData, isLoading }: CommentBoardProps) => {
                 }
 
                 { !isLoading && ( commentData.length > 0 ? renderComments() 
-                    : <div className={styles.spanCenter}>No comments</div> 
-                
+                    : 
+                        <div className={styles.spanCenter}>No comments</div> 
                     ) 
                 }
         
-                <div className={styles.inputSection}>
-                    <div style={{width:'100%'}}>
-                        <TextInput
-                            inputNameAttribute='message'
-                            inputValueAttribute=''
-                            placeholder='Start typing'
-                            onChangeHandler={()=>{}}
-                            isRequired={false}
-                            labelTitle=''
-                            margin={true}
-                        />
-                    </div>
-                    <ButtonBtn
-                        type='button'
-                        isDisabled={true}
-                        onClickHandler={()=>{}}
-                        buttonText='Add'
-                        buttonStyleColor='blue'
-                    />
-                </div>
+                {
+                    isLoggedIn && 
+                    (
+                        <div className={styles.inputSection}>
+                            <div style={{width:'100%'}}>
+                                <TextInput
+                                    inputNameAttribute='message'
+                                    inputValueAttribute={inputValue}
+                                    placeholder='Start typing'
+                                    onChangeHandler={(event) => onChangeHandler(event)}
+                                    isRequired={false}
+                                    labelTitle=''
+                                    margin={true}
+                                />
+                            </div>
+                            <ButtonBtn
+                                type='button'
+                                isDisabled={isValid}
+                                loadingState={postLoading}
+                                onClickHandler={onSubmitHandler}
+                                buttonText='Add'
+                                buttonStyleColor='blue'
+                            />
+                        </div>
+                    )
+                }
+
             </div>
         </div>
     )
