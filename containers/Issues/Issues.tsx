@@ -25,7 +25,7 @@ const Issues = () => {
 
     useEffect(() => {
       Promise.all([
-        getRecentIssues(issueContext?.setTeamIssues || (()=>{}), sendRequest),
+        getRecentIssues('', issueContext?.setTeamIssues || (()=>{}), sendRequest),
         getIssuesByPriority('high', issueContext?.setHighPriorityIssues || (()=>{}), sendRequest),
         getIssuesByStatus('in_progress', issueContext?.setInProgressIssues || (()=>{}), sendRequest),
       ])
