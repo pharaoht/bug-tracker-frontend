@@ -1,9 +1,9 @@
-import Image from 'next/image';
+import Comment from './Comment/Comment';
 import ButtonBtn from '../Inputs/Button/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import TextInput from '../Inputs/TextInput/TextInput';
 import styles from './commentBoard.module.css';
-import { ChangeEvent, useState, useRef, useEffect } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { commentApi } from '@/api/Comments/comments.api';
 import useHttp from '@/hooks/useHttp';
 
@@ -33,13 +33,49 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
 
     const [ inputValue, setInputValue ] = useState<string>('');
 
-    const { postCreateCommentToIssueId, getCommentsByIssueId } = commentApi;
+    const { postCreateCommentToIssueId, getCommentsByIssueId, deleteCommentToIssueId } = commentApi;
 
     const { isLoading: postLoading, sendRequest, error } = useHttp();
 
+    const { isLoading: deleteLoading, sendRequest: deleteRequest, error: deleteError } = useHttp();
+
     const isValid = inputValue == '' ? true : false;
 
+    const commentBoardRef = useRef<HTMLDivElement>(null);
+
     const onChangeHandler = ( event: ChangeEvent<HTMLInputElement> ) => setInputValue(event.target.value);
+
+    const onEditHandler = ( event: React.MouseEvent<HTMLButtonElement>, commentId: number ) => {
+        
+    }
+
+    const onDeleteHandler = async ( event: React.MouseEvent<HTMLButtonElement>, commentId: number ) => {
+
+        event.preventDefault();
+
+        const isConfirmed = window.confirm('Are you sure you want to delete?');
+
+        if (!isConfirmed) return;
+
+        const id = String(commentId);
+
+        const responseCallback = ( res: any) => {
+
+            if(res.data == 'success'){
+                alert('Deleted Successfully')
+            };
+
+            if(typeof res == 'string'){
+                alert('Your session expired, please login again')
+            }
+
+            getCommentsByIssueId(issueId, setComments, commentRequest);
+
+        };
+
+        await deleteCommentToIssueId(token, id, deleteRequest, responseCallback);
+
+    }
 
     const onSubmitHandler =  async ( event: React.MouseEvent<HTMLButtonElement> ) => {
 
@@ -54,12 +90,18 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
         const callbackFunc = ( result: any ) => {
 
             if(result?.data == 'success'){
+
                setInputValue('');
-               getCommentsByIssueId(issueId, setComments, commentRequest)
-               alert('success')
+
+               getCommentsByIssueId(issueId, setComments, commentRequest);
+
+               alert('success');
+
             }
             if(typeof result === 'string'){
-                alert(result)
+
+                alert(result);
+
             }
         }
 
@@ -70,26 +112,30 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
 
         <div className={styles.texts}>
             {
-                commentData.map((itm, idx) => (
-                    <div key={itm.id} className={styles.commentContainer}>
-
-                        <div className={styles.commentHeader}>
-                            <div className={styles.profileImage}>
-                                <Image width={25} height={25} src={itm.imageUrl} alt={`${itm.createdBy}'s profile`} />
-                            </div>
-                            <div className={styles.userInfo}>
-                                <span className={styles.userName}>{itm.createdBy}</span>
-                                <b><span className={styles.commentDate}>{itm.createdAt}</span></b>
-                            </div>
-                        </div>
-                        <div className={styles.commentText}>
-                            {itm.text}
-                        </div>
-                    </div>
+                commentData?.map((itm, idx) => (
+                    <Comment
+                        key={itm.id}
+                        commentId={String(itm.id)}
+                        commentDate={itm.createdAt}
+                        commentText={itm.text}
+                        commentUserId={String(itm.userId)}
+                        createdBy={itm.createdBy}
+                        profileImageUrl={itm.imageUrl}
+                        isUserLogIn={isLoggedIn}
+                        onDeleteHandler={onDeleteHandler}
+                        loginUserId={userId}
+                        loadingState={deleteLoading}
+                    />
                 ))
             }
         </div>
     );
+
+    useEffect(() => {
+    if (commentBoardRef.current) {
+        commentBoardRef.current.scrollTop = 270
+    }
+    }, []);
 
     return (
         <div className={styles.container}>
@@ -98,7 +144,8 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
             >
                 Comments 
             </label>
-            <div className={styles.commentBoard}>
+            <div className={styles.commentBoard} ref={commentBoardRef}>
+    
                 { isLoading &&   
                     <div className={styles.spanCenter}>
                        <CircularProgress/>

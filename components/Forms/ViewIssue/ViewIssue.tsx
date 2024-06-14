@@ -177,7 +177,7 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
   }, [formState.id]);
 
-  console.log(isLoggedIn)
+
   return (
     <form className={styles.form}>
         <div className={styles.headTitle}>

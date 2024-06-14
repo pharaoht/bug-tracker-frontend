@@ -1,7 +1,4 @@
 .buttonSkeleton{
-    height: 36px;
-    padding: 0 16px;
-    border-radius: 36px;
     color: var(--light);
     display: flex;
     justify-content: center;
@@ -10,6 +7,24 @@
     font-weight: 500;
     cursor: pointer;
     border: none;
+}
+
+.small{
+    height: 15px;
+    padding: 7px 7.5px;
+    border-radius: 15px;
+}
+
+.medium{
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 36px;
+}
+
+.large{
+    height: 46px;
+    padding: 0 26px;
+    border-radius: 46px;
 }
 
 .buttonSkeleton:disabled {

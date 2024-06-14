@@ -86,7 +86,6 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
 
         return undefined;
     };
-    
 
     return (
         <Suspense fallback={<>Loading...</>}>

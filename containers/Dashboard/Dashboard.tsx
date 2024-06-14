@@ -30,10 +30,11 @@ const Dashboard = () => {
 
     const dashbaordContext = useContext(DashboardContext);
 
-
     const userProfileContext = useContext(UserContext);
 
     const { isLoading, sendRequest, error } = useHttp();
+
+    const { isLoading: sortLoading, sendRequest: sortRequest, error: sortError } = useHttp();
 
     const { getIssuesByPriority, getRecentIssues, getSortIssues } = issuesApi;
 
@@ -47,7 +48,7 @@ const Dashboard = () => {
 
     const sortFunction = async () => {
 
-        return await getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sendRequest)
+        return await getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sortRequest)
     }
 
     useEffect(() => {
@@ -55,8 +56,8 @@ const Dashboard = () => {
       if(viewIssueOpen === false && isOpen === false){
 
           Promise.all([
-            getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sendRequest),
-            getRecentIssues(dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest),
+            getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sortRequest),
+            getRecentIssues(dashbaordContext?.paramString || '',dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest),
             getIssuesByPriority('high', dashbaordContext?.setUrgentIssuesData || (()=>{}), sendRequest),
     
         ])
@@ -68,8 +69,7 @@ const Dashboard = () => {
     useEffect(() => {
 
         sortFunction()
-        getRecentIssues(dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest)
-    
+        getRecentIssues(dashbaordContext?.paramString || '',dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest)
     }, [dashbaordContext?.queryParams])
   
     return (

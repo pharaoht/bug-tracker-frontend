@@ -10,17 +10,20 @@ interface ButtonBtnPropTypes {
     buttonStyleColor?: 'orange' | 'yellow' | 'blue' | 'green' | 'red';
     loadingState?: boolean;
     isDisabled?: boolean;
+    size?: 'small' | 'medium' | 'large'
 }
 
 const ButtonBtn = (
-    { type, isDisabled, onClickHandler, buttonText, buttonIcon, buttonStyleColor, loadingState } : ButtonBtnPropTypes
+    { type, isDisabled, onClickHandler, buttonText, buttonIcon, buttonStyleColor, loadingState, size } : ButtonBtnPropTypes
 ) => {
 
     const cssBtnColor = styles[buttonStyleColor || ''];
 
+    const cssBtnSize = styles[size || 'medium'];
+
     return (
         <button
-            className={`${styles.buttonSkeleton} ${cssBtnColor}`}
+            className={`${styles.buttonSkeleton} ${cssBtnColor} ${cssBtnSize}`}
             type={type}
             onClick={onClickHandler}
             disabled={loadingState || isDisabled || false}

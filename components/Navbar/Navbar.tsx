@@ -21,15 +21,27 @@ const Navbar = () => {
 
     const contextSetterUserProfile = userContext?.setUserInfo || (() => {})
 
-    const { userDetails } = authApi;
+    const { userDetails, logout } = authApi;
 
-    const { isLoading, sendRequest } = useHttp()
+    const { isLoading, sendRequest } = useHttp();
+
+    const requestCallback = async ( response: [] ) => {
+
+        if(typeof response == 'string'){
+
+            await logout(sendRequest, contextSetterUserProfile);
+        }
+        else {
+            contextSetterUserProfile(response)
+        }
+
+    }
 
     useEffect(() =>{
 
         if(!isLoggedIn && userToken){
             const tk =  userToken
-            userDetails(contextSetterUserProfile, sendRequest, tk)
+            userDetails(requestCallback, sendRequest, tk)
         }
     }, [ userToken]);
 

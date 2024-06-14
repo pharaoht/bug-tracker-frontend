@@ -10,15 +10,15 @@ const getIssuesByTeam = async (
 ) => {};
 
 const getRecentIssues = async (
-    
+    params: string,
     contextSetter: (data: any[]) => void,
     httpRequest: (...args: any) => Promise<any>,
 
 ) => {
 
     const url = window.location.host === devDomain 
-    ? 'http://localhost:8000/api/issues'
-    :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues`
+    ? `http://localhost:8000/api/issues?${params}`
+    :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues?${params}`
 
     const requestObj = {
         url: url,

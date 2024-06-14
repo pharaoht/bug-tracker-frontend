@@ -59,7 +59,7 @@
 
 .tableData .order table td {
     padding: 16px 0;
-        cursor: pointer;
+    cursor: pointer;
 }
 
 .tableData .order table tr td:first-child {
