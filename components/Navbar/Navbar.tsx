@@ -1,5 +1,5 @@
 'use client'
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './navbar.module.css';
 import Link from 'next/link';
 import UserContext from '@/context/UserContext';
@@ -8,8 +8,15 @@ import useHttp from '@/hooks/useHttp';
 import Image from 'next/image';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
+import { connectSocket, disconnectSocket } from '@/sockets';
+import { notificationsApi } from '@/api/Notifications/notifications.api';
+import Notifications from '../Notfications/Notifications';
 
 const Navbar = () => {
+
+    const [ notifications, setNotifications ] = useState<any[]>([]);
+
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
     const userContext = useContext(UserContext);
 
@@ -17,13 +24,19 @@ const Navbar = () => {
 
     const userToken = userContext?.token || '';
 
+    const currentUserId = userProfile[0]?.id || ''
+
     const isLoggedIn = userContext?.isLoggedIn || false;
 
     const contextSetterUserProfile = userContext?.setUserInfo || (() => {})
 
     const { userDetails, logout } = authApi;
 
+    const { getNotificationsByUserId } = notificationsApi;
+
     const { isLoading, sendRequest } = useHttp();
+
+    const { isLoading: notificationLoading, sendRequest: notificationRequest, error: notificationError } = useHttp();
 
     const requestCallback = async ( response: [] ) => {
 
@@ -37,14 +50,34 @@ const Navbar = () => {
 
     }
 
+    const getNotifications = async () => {
+
+        await getNotificationsByUserId(userToken, currentUserId, setNotifications, notificationRequest);
+    }
+
     useEffect(() =>{
 
         if(!isLoggedIn && userToken){
             const tk =  userToken
             userDetails(requestCallback, sendRequest, tk)
         }
-    }, [ userToken]);
+    }, [ userToken ]);
 
+    useEffect(() => {
+
+        if(userProfile.length > 0){
+            connectSocket(currentUserId, setNotifications)
+        }
+
+        if(notifications.length == 0 && currentUserId){
+            getNotifications()
+        }
+
+        return () => {
+            disconnectSocket();
+        };
+
+    }, [userProfile])
 
     return (
         <nav className={styles.nav}>
@@ -66,12 +99,19 @@ const Navbar = () => {
                 }
             </span>
             { isLoggedIn &&
-                <Link href="#" className={styles.notification}>
-                    <i className={`${styles.bx} ${styles.bellIcon}`}>
-                        <NotificationsIcon/>
-                    </i>
-                    <span className={styles.num}>8</span>
-                </Link>
+                <div className={styles.notificationContainer}>
+                    <Link href="#" className={styles.notification} onClick={() => setIsOpen(!isOpen)}>
+                        <i className={`${styles.bx} ${styles.bellIcon}`}>
+                            <NotificationsIcon/>
+                        </i>
+                        {   notifications.length > 0 &&
+                            <span className={styles.num}>{notifications.length}</span>
+                        }
+                    </Link>
+                    {
+                        isOpen && <Notifications notifications={notifications}/>
+                    }
+                </div>
             }
             { isLoggedIn &&
                 <Link href="#" className={styles.profile}>

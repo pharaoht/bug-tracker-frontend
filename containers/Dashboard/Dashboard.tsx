@@ -99,7 +99,7 @@ const Dashboard = () => {
                 />
                 <Widget
                   loadingState={isLoading}
-                  value={String(dashbaordContext?.urgentIssues.length) || '0'}
+                  value={String(dashbaordContext?.urgentIssues?.length) || '0'}
                   title='High Priority'
                   color='orange'
                   icon={<UrgentIcon fontSize="large"/>}

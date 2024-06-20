@@ -133,6 +133,9 @@
     transition: all .3s ease;
 }
 
+.notificationContainer {
+    position: relative;
+}
 .switch-mode:checked+.switchMode::before {
     left: calc(100% - (25px - 4px) - 2px);
 }

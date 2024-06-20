@@ -34,7 +34,7 @@ const Comment = ({ key, commentId, commentUserId, loginUserId, profileImageUrl, 
                         <ButtonBtn
                             type='button'
                             isDisabled={false}
-                            loadingState={false}
+                            loadingState={loadingState}
                             onClickHandler={(event) => onDeleteHandler(event, commentId)}
                             buttonText='X'
                             buttonStyleColor='red'
@@ -43,7 +43,7 @@ const Comment = ({ key, commentId, commentUserId, loginUserId, profileImageUrl, 
                         <ButtonBtn 
                             type='button'
                             isDisabled={false}
-                            loadingState={loadingState}
+                            loadingState={false}
                             onClickHandler={(event) => {}}
                             buttonText='Edit'
                             size='small'
