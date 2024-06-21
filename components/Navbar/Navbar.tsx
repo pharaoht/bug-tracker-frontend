@@ -32,7 +32,7 @@ const Navbar = () => {
 
     const { userDetails, logout } = authApi;
 
-    const { getNotificationsByUserId } = notificationsApi;
+    const { getNotificationsByUserId, deleteNotificationById, updateNotificationById } = notificationsApi;
 
     const { isLoading, sendRequest } = useHttp();
 
@@ -53,6 +53,16 @@ const Navbar = () => {
     const getNotifications = async () => {
 
         await getNotificationsByUserId(userToken, currentUserId, setNotifications, notificationRequest);
+    }
+
+    const deleteNotification = async ( notificationId: string ) => {
+        await deleteNotificationById(userToken, notificationId, notificationRequest);
+        await getNotifications();
+    }
+
+    const updateNotificationAsRead = async ( notificationId: string ) => {
+        await updateNotificationById(userToken, notificationId, notificationRequest);
+        await getNotifications();
     }
 
     useEffect(() =>{
@@ -91,8 +101,6 @@ const Navbar = () => {
                     </button>
                 </div>
             </form>
-            {/* <input type="checkbox" className={styles.switchMode} hidden />
-            <label htmlFor="switchMode" className={`${styles.switchMode}`}></label> */}
             <span>
                 {
                     isLoggedIn ? `Welcome ${userProfile[0].name}` : 'Not logged in'
@@ -109,7 +117,12 @@ const Navbar = () => {
                         }
                     </Link>
                     {
-                        isOpen && <Notifications notifications={notifications}/>
+                        isOpen && 
+                        <Notifications 
+                            notifications={notifications} 
+                            updateHandler={updateNotificationAsRead} 
+                            deleteHandler={deleteNotification}
+                        />
                     }
                 </div>
             }

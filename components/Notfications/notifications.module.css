@@ -3,6 +3,7 @@
     right: -100%;
     width: 300px;
     max-height: 200px;
+    overflow-y:scroll;
     background-color: white;
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -12,7 +13,35 @@
 }
 
 .notificationItem {
+    position: relative;
     padding: 8px 0;
     border-bottom: 1px solid #eee;
     color: #333;
+    cursor: default;
+}
+
+.notificationItem:hover .close {
+    visibility: visible;
+}
+
+.close{
+    margin-left: 5px;
+    position: absolute;
+    right: 0;
+    visibility: hidden;
+    display: flex;
+    gap: 10px;
+    background-color: white;
+}
+
+.isRead{
+    color: var(--grey-d-1);
+}
+
+.isOpen{
+    color: black;
+}
+
+.time{
+    font-size: 13px;
 }

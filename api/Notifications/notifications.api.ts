@@ -26,16 +26,60 @@ const getNotificationsByUserId = async (
     return undefined;
 }
 
-const deleteNotification = async (
+const updateNotificationById = async (
 
+    token: string,
     notificationId: string,
     httpRequest: (...args: any) => Promise<any>,
 
 ) => {
 
+    const url = window.location.host === devDomain 
+    ? `http://localhost:8000/api/notifications/${notificationId}`
+    :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/notifications/${notificationId}`
+
+    const requestObj = {
+        url: url,
+        method: 'PUT',
+        withCredentials: true,
+        headers: {
+            authorization: token
+        }
+    }
+
+    await httpRequest({requestConfig: requestObj, callback: () => {}});
+
+    return undefined;
+}
+
+const deleteNotificationById = async (
+
+    token: string,
+    notificationId: string,
+    httpRequest: (...args: any) => Promise<any>,
+
+) => {
+
+    const url = window.location.host === devDomain 
+    ? `http://localhost:8000/api/notifications/${notificationId}`
+    :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/notifications/${notificationId}`
+
+    const requestObj = {
+        url: url,
+        method: 'DELETE',
+        withCredentials: true,
+        headers: {
+            authorization: token
+        }
+    }
+
+    await httpRequest({requestConfig: requestObj, callback: () => {}});
+
+    return undefined;
 }
 
 export const notificationsApi = {
     getNotificationsByUserId,
-    deleteNotification
+    deleteNotificationById,
+    updateNotificationById
 }
