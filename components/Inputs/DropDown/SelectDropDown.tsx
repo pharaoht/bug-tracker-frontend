@@ -25,6 +25,7 @@ const SelectDropDownInput = ({ isDisabled, onChangeHandler, inputValueAttribute,
         <div className={`${styles.formGroup} ${bottomMargin}`}>
             <label htmlFor={inputNameAttribute}>{labelTitle}</label>
             <select 
+                id={inputNameAttribute}
                 className={styles[lowerCase]}
                 name={inputNameAttribute} 
                 value={inputValueAttribute}

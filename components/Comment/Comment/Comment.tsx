@@ -23,7 +23,7 @@ const Comment = ({ key, commentId, commentUserId, loginUserId, profileImageUrl, 
 
     return (
         <div 
-            key={key} 
+            key={commentId} 
             className={styles.commentContainer}
         >
             { isOwner &&

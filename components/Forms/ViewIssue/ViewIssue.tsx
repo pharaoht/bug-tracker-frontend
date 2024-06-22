@@ -57,114 +57,133 @@ const priorities = [
 
 const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTypes ) => {
 
-  const issueData = selectedIssueData;
+    const issueData = selectedIssueData;
 
-  const [ formState, setFormState ] = useState<formStateType>({
-    id: issueData.id,
-    title: issueData.title,
-    description: issueData.description,
-    status: issueData.status.toLowerCase().replace(/ /,'_'),
-    priority: issueData.priority.toLowerCase(),
-    userId: issueData.userId,
-    teamId:issueData.teamId,
-  });
+    const [ formState, setFormState ] = useState<formStateType>({
+        id: issueData.id,
+        title: issueData.title,
+        description: issueData.description,
+        status: issueData.status.toLowerCase().replace(/ /,'_'),
+        priority: issueData.priority.toLowerCase(),
+        userId: issueData.userId,
+        teamId:issueData.teamId,
+    });
 
-  const [ comments, setComments ] = useState<any[]>([]);
+    const [ isDirty, setIsDirty ] = useState<boolean>(false);
 
-  const [ images, setImages ] = useState<any[]>([]);
+    const [ comments, setComments ] = useState<any[]>([]);
 
-  const { isLoading: updateIssueLoading, sendRequest: updateIssueRequest, error: updateIssueError } = useHttp();
+    const [ images, setImages ] = useState<any[]>([]);
 
-  const { isLoading: deleteLoading, sendRequest: deleteRequest, error: deleteError } = useHttp();
+    const { isLoading: updateIssueLoading, sendRequest: updateIssueRequest, error: updateIssueError } = useHttp();
 
-  const { isLoading: imagesLoading, sendRequest: imagesRequest, error: imagesError } = useHttp();
+    const { isLoading: deleteLoading, sendRequest: deleteRequest, error: deleteError } = useHttp();
 
-  const { isLoading: commentLoading, sendRequest: commentRequest, error: commentError } = useHttp();
+    const { isLoading: imagesLoading, sendRequest: imagesRequest, error: imagesError } = useHttp();
 
-  const { putUpdateIssue, deleteArchiveIssue } = issuesApi;
+    const { isLoading: commentLoading, sendRequest: commentRequest, error: commentError } = useHttp();
 
-  const { getImagesByIssueId } = issueImagesApi;
+    const { putUpdateIssue, deleteArchiveIssue } = issuesApi;
 
-  const { getCommentsByIssueId } = commentApi;
+    const { getImagesByIssueId } = issueImagesApi;
 
-  const userProfileContext = useContext(UserContext);
+    const { getCommentsByIssueId } = commentApi;
 
-  const userProfile = userProfileContext?.userInfo && userProfileContext?.userInfo[0] || {}
+    const userProfileContext = useContext(UserContext);
 
-  const token = userProfileContext?.token || '';
+    const userProfile = userProfileContext?.userInfo && userProfileContext?.userInfo[0] || {}
 
-  const { id, name } = userProfile || {};
+    const token = userProfileContext?.token || '';
 
-  const isLoggedIn = Object.keys(userProfile).length > 0 ? true : false
+    const { id, name } = userProfile || {};
 
-  const isDisabled = id == issueData.userId ? false : true;
+    const isLoggedIn = Object.keys(userProfile).length > 0 ? true : false
 
-  const formStateKeys = Object.keys(formState);
+    const isDisabled = id == issueData.userId ? false : true;
 
-  const onChangeFormHandler = ( event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> ) => {
+    const formStateKeys = Object.keys(formState);
 
-    const inputName = event.target.name;
-    const inputValue = event.target.value;
+    const onChangeFormHandler = ( event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> ) => {
 
-    setFormState( prevState => ({
-      ...prevState,
-      [inputName]: inputValue
-    }));
+        const inputName = event.target.name;
+        const inputValue = event.target.value;
 
-  }
+        setFormState( prevState => ({
+        ...prevState,
+        [inputName]: inputValue
+        }));
 
-  const validateFormHandler = () => {};
+        if(!isDirty){
+            setIsDirty(true);
+        }
 
-  const onSubmitFormHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
-
-    event.preventDefault();
-
-    const id = formState.id;
-
-    const responseCallback = ( res: { data: string }) => {
-
-      if(res.data == 'success'){
-          alert('success')
-      }
     }
 
-    await putUpdateIssue(token, id, formState, updateIssueRequest, responseCallback )
+    const validateFormHandler = () => {};
+
+    const onSubmitFormHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
+
+        event.preventDefault();
+
+        const id = formState.id;
+
+        const responseCallback = ( res: { data: string }) => {
+
+            if(res.data == 'success'){
+
+                alert('success');
+
+                setIsDirty(false);
+            }
+        }
+
+        await putUpdateIssue(token, id, formState, updateIssueRequest, responseCallback )
+    }
+
+    const onDeleteHandler = async ( event: React.MouseEvent<HTMLButtonElement> ) => {
+        
+        event.preventDefault();
+
+        const isConfirmed = window.confirm('Are you sure you want to delete?');
+
+        if (!isConfirmed) return;
+        
+        const id = formState.id;
+
+        const responseCallback = ( res: { data: string }) => {
+
+            if(res.data == 'success'){
+                alert('Deleted Successfully')
+            }
+
+            onCloseFormHandler();
+        }
+
+
+        await deleteArchiveIssue(token, id, deleteRequest, responseCallback );
+
   }
 
-  const onDeleteHandler = async ( event: React.MouseEvent<HTMLButtonElement> ) => {
-    
-    event.preventDefault();
+    const onCloseFormHandler = () => {
 
-    const isConfirmed = window.confirm('Are you sure you want to delete?');
+        if(isDirty){
 
-    if (!isConfirmed) return;
-    
-    const id = formState.id;
+            const isConfirm = window.confirm('You have unsaved changes, are you sure you want to leave without saving?');
 
-    const responseCallback = ( res: { data: string }) => {
+            if(!isConfirm) return;
+        }
 
-      if(res.data == 'success'){
-          alert('Deleted Successfully')
-      }
-
-      onCloseFormHandler();
+        toggleViewIssueForm(false);
     }
 
 
-    await deleteArchiveIssue(token, id, deleteRequest, responseCallback );
-
-  }
-
-  const onCloseFormHandler = () => toggleViewIssueForm(false);
-
-
-  const renderIssueImages = () => images.map((itm, idx) => (
+    const renderIssueImages = () => images.map((itm, idx) => (
         <div key={itm.url}>
             {
-                imagesLoading ? 'Loading' : <Image key={itm.url} src={itm.url} height={150} width={150} alt='image_issue'/>
+                imagesLoading ? 'Loading' : <Image key={itm.url} src={itm.url} height={150} width={200} alt='image_issue'/>
             }
         </div>
-  ))
+    ))
 
   useEffect(() => {
 
@@ -265,7 +284,7 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
           onClickHandler={onSubmitFormHandler}
           buttonText='Update'
           buttonStyleColor='green'
-          isDisabled={isDisabled}
+          isDisabled={isDisabled || !isDirty && true}
         />
       </div>
     </form>

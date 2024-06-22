@@ -49,7 +49,7 @@ const Sidebar = ({ pageIndex, setPageIndex }: SidebarProps) => {
         <section className={styles.sidebar}>
             <Link href="#" className={styles.brand}>
                 <i className={styles.bx}></i>
-                <span className={styles.text}>AdminHub</span>
+                <span className={styles.text}>Bug Tracker</span>
             </Link>
             <ul className={styles.sideMenu}>
                 {renderSideMenu()}

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import styles from './textArea.module.css';
 
 interface TextAreaPropTypes {
@@ -15,6 +16,20 @@ const TextAreaInput = ({ inputNameAttribute, inputValueAttribute, onChangeHandle
 
     const bottomMargin = margin ? styles.noMargin : styles.margin;
 
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+    useEffect(() => {
+
+        if(textAreaRef.current){
+
+            if(textAreaRef?.current?.scrollHeight > 237){
+                return
+            }
+            textAreaRef.current.style.height = 'auto';
+            textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+        }
+    }, [inputValueAttribute])
+
     return (
         <div className={styles.formGroup}>
             <label 
@@ -24,6 +39,8 @@ const TextAreaInput = ({ inputNameAttribute, inputValueAttribute, onChangeHandle
                 {labelTitle}
             </label>
             <textarea
+                id={inputNameAttribute}
+                ref={textAreaRef}
                 className={styles.textArea}
                 name={inputNameAttribute}
                 value={inputValueAttribute}

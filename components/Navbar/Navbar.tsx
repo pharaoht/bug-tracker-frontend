@@ -50,6 +50,11 @@ const Navbar = () => {
 
     }
 
+    const openNotificationHandler = ( event: React.MouseEvent<HTMLAnchorElement ,MouseEvent>) => {
+        event.preventDefault();
+        setIsOpen(!isOpen)
+    }
+
     const getNotifications = async () => {
 
         await getNotificationsByUserId(userToken, currentUserId, setNotifications, notificationRequest);
@@ -108,7 +113,7 @@ const Navbar = () => {
             </span>
             { isLoggedIn &&
                 <div className={styles.notificationContainer}>
-                    <Link href="#" className={styles.notification} onClick={() => setIsOpen(!isOpen)}>
+                    <Link href="#" className={styles.notification} onClick={(event) => openNotificationHandler(event)}>
                         <i className={`${styles.bx} ${styles.bellIcon}`}>
                             <NotificationsIcon/>
                         </i>

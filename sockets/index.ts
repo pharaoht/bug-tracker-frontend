@@ -15,7 +15,7 @@ export const connectSocket = ( userId: string, setNotifications: React.Dispatch<
     });
 
     socket.on('newCommentOnIssue', ( data: { message: any } ) => {
-        setNotifications(prev => [...prev, data.message]);
+        setNotifications(prev => [data.message, ...prev]);
     })
 
     socket.emit('userConnected', userId);

@@ -56,7 +56,7 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
         return await getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sendRequest)
     }
 
-    const renderTableRow = () => tableData.map((itm, idx) => 
+    const renderTableRow = () => tableData?.map((itm, idx) => 
 
         {
             const cssStatusName = itm.status.includes(' ') ? itm.status.replace(/ /, '_') : itm.status
@@ -113,7 +113,7 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
             <div className={styles.tableData}>
                 <div className={styles.order}>
                     <div className={styles.head}>
-                        <h3>Recent Tickets <span style={{fontSize:'10px'}}><em>(10 per page)</em></span></h3>
+                        <h3>Issues <span style={{fontSize:'10px'}}><em>(10 per page)</em></span></h3>
                         <Paginator />
                     </div>
                     <table className={styles.table}>

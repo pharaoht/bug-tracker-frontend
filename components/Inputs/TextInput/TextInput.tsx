@@ -24,6 +24,7 @@ const TextInput = ({ placeholder, isRequired, onChangeHandler, labelTitle, input
                 {labelTitle}
             </label>
             <input
+                id={inputNameAttribute}
                 className={styles.inputElement}
                 type='text'
                 name={inputNameAttribute}

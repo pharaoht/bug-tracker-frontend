@@ -12,7 +12,7 @@ const Notifications = ({ notifications, updateHandler, deleteHandler }: Notifica
 
     const renderNotifications = ( ) => (
         
-        notifications.map((itm) => {
+        notifications?.map((itm) => {
             return (
                 <div key={itm.id} className={styles.notificationItem}>
                     <span className={styles.close}>
@@ -35,7 +35,7 @@ const Notifications = ({ notifications, updateHandler, deleteHandler }: Notifica
                             size='small'
                         />
                     </span>
-                    <span className={styles.time}>At {itm.createdAt}</span>
+                    <span className={`${styles.time} ${itm.isRead == true ? styles.isRead : styles.isOpen }`}>{itm.createdAt}</span>
                     <p className={ itm.isRead == true ? styles.isRead : styles.isOpen }>
                         {itm.message}
                     </p>
