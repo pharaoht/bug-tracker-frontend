@@ -24,6 +24,12 @@
     visibility: visible;
 }
 
+.notificationChild{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
 .close{
     margin-left: 5px;
     position: absolute;

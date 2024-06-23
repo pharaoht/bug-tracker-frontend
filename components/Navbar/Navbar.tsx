@@ -80,7 +80,7 @@ const Navbar = () => {
 
     useEffect(() => {
 
-        if(userProfile.length > 0){
+        if(userProfile?.length > 0){
             connectSocket(currentUserId, setNotifications)
         }
 
@@ -117,14 +117,16 @@ const Navbar = () => {
                         <i className={`${styles.bx} ${styles.bellIcon}`}>
                             <NotificationsIcon/>
                         </i>
-                        {   notifications.length > 0 &&
+                        {   notifications?.length > 0 &&
                             <span className={styles.num}>{notifications.length}</span>
                         }
                     </Link>
                     {
                         isOpen && 
                         <Notifications 
-                            notifications={notifications} 
+                            isError={notificationError}
+                            isLoading={notificationLoading}
+                            notifications={notifications || []} 
                             updateHandler={updateNotificationAsRead} 
                             deleteHandler={deleteNotification}
                         />

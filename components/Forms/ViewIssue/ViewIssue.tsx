@@ -101,6 +101,8 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
     const isDisabled = id == issueData.userId ? false : true;
 
+    const isClosed = issueData?.status === 'CLOSED' ? true : false;
+
     const formStateKeys = Object.keys(formState);
 
     const onChangeFormHandler = ( event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> ) => {
@@ -109,8 +111,8 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
         const inputValue = event.target.value;
 
         setFormState( prevState => ({
-        ...prevState,
-        [inputName]: inputValue
+            ...prevState,
+            [inputName]: inputValue
         }));
 
         if(!isDirty){
@@ -257,14 +259,16 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
             </div>
             <div className={styles.detailsChildTwo}>
                 <CommentBoard
-                    commentData={comments}
+                    commentData={comments || []}
                     isLoading={commentLoading}
+                    isError={commentError}
                     isLoggedIn={isLoggedIn}
                     userId={id}
                     issueId={formState.id}
                     token={token}
                     setComments={setComments}
                     commentRequest={commentRequest}
+                    isClosed={isClosed}
                 />
             </div>
         </div>

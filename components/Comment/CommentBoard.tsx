@@ -16,6 +16,7 @@ interface CommentData {
     imageUrl: string,
     teamName: string,
     text: string, 
+
 }
 
 interface CommentBoardProps {
@@ -25,11 +26,13 @@ interface CommentBoardProps {
     userId: string;
     issueId: string;
     token: string;
+    isClosed: boolean;
+    isError: string;
     setComments: (...args: any) => void;
     commentRequest: (...args: any) => any;
 }
 
-const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, token, setComments , commentRequest }: CommentBoardProps) => {
+const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, token, isClosed, isError, setComments , commentRequest }: CommentBoardProps) => {
 
     const [ inputValue, setInputValue ] = useState<string>('');
 
@@ -108,9 +111,9 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
         await postCreateCommentToIssueId(token, postBody, sendRequest, callbackFunc);
     };
 
-    const renderComments = () => (
+    const renderComments = () => {
 
-        <div className={styles.texts}>
+        return <div className={styles.texts}>
             {
                 commentData?.map((itm, idx) => (
                     <Comment
@@ -129,13 +132,21 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
                 ))
             }
         </div>
-    );
+    };
 
-    useEffect(() => {
-    if (commentBoardRef.current) {
-        commentBoardRef.current.scrollTop = 270
-    }
-    }, []);
+    const renderStage = ( condition: boolean | string, jsx: React.ReactNode | string ): React.ReactNode => {
+
+        if(condition){
+
+            return (
+                <div className={styles.spanCenter}>
+                    { jsx }
+                </div>
+            )
+        }
+
+        return <></>
+    };
 
     return (
         <div className={styles.container}>
@@ -145,18 +156,14 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
                 Comments 
             </label>
             <div className={styles.commentBoard} ref={commentBoardRef}>
-    
-                { isLoading &&   
-                    <div className={styles.spanCenter}>
-                       <CircularProgress/>
-                    </div> 
-                }
 
-                { !isLoading && ( commentData.length > 0 ? renderComments() 
-                    : 
-                        <div className={styles.spanCenter}>No comments</div> 
-                    ) 
-                }
+                { renderStage(isLoading, <CircularProgress/>) }
+
+                { renderStage(isError, isError)}
+
+                { renderStage(!isLoading && !isError && commentData.length == 0, 'No comments')}
+
+                { !isLoading && !isError && ( commentData.length > 0 && renderComments() ) }
         
                 {
                     isLoggedIn && 
@@ -166,11 +173,12 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
                                 <TextInput
                                     inputNameAttribute='message'
                                     inputValueAttribute={inputValue}
-                                    placeholder='Start typing'
+                                    placeholder={isClosed ? 'Issue Closed' : 'Start typing'}
                                     onChangeHandler={(event) => onChangeHandler(event)}
                                     isRequired={false}
                                     labelTitle=''
                                     margin={true}
+                                    isDisabled={isClosed ? true : false}
                                 />
                             </div>
                             <ButtonBtn

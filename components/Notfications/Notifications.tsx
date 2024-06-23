@@ -1,18 +1,21 @@
+import { CircularProgress } from '@mui/material';
 import ButtonBtn from '../Inputs/Button/Button';
 import styles from './notifications.module.css';
 
 
 interface NotificationsPropTypes {
     notifications: any[];
+    isError: string;
+    isLoading: boolean;
     updateHandler: (...args: any) => void;
     deleteHandler: (...args: any) => void;
 }
 
-const Notifications = ({ notifications, updateHandler, deleteHandler }: NotificationsPropTypes) => {
+const Notifications = ({ notifications, isError, isLoading, updateHandler, deleteHandler }: NotificationsPropTypes) => {
 
-    const renderNotifications = ( ) => (
+    const renderNotifications = ( ) => {
         
-        notifications?.map((itm) => {
+        return notifications?.map((itm) => {
             return (
                 <div key={itm.id} className={styles.notificationItem}>
                     <span className={styles.close}>
@@ -42,14 +45,17 @@ const Notifications = ({ notifications, updateHandler, deleteHandler }: Notifica
                 </div>
             )
         })
-    )
-
+    }
+  
     return (
         <div className={styles.notificationBox}>
             <h4>Notifications</h4>
-            {
-                notifications.length > 0 ? renderNotifications() : 'No new notifications'
-            }
+            <div className={styles.notificationChild}>
+                { isError && isError }
+                { isLoading && <CircularProgress size='35px'/> }
+            </div>
+            { notifications.length > 0 && !isError && !isLoading && renderNotifications() }
+            { notifications.length == 0 && !isError && !isLoading && 'No new notifications'}
         </div>
     )
 };

@@ -4,7 +4,6 @@ import ButtonBtn from '@/components/Inputs/Button/Button';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface CommentProps {
-    key: number;
     commentId: string;
     commentUserId: string;
     loginUserId?: string;
@@ -17,13 +16,12 @@ interface CommentProps {
     loadingState: boolean;
 }
 
-const Comment = ({ key, commentId, commentUserId, loginUserId, profileImageUrl, createdBy, isUserLogIn, commentDate, commentText,  onDeleteHandler, loadingState }: CommentProps ) => {
+const Comment = ({ commentId, commentUserId, loginUserId, profileImageUrl, createdBy, isUserLogIn, commentDate, commentText,  onDeleteHandler, loadingState }: CommentProps ) => {
 
     const isOwner = isUserLogIn ? Number(commentUserId) === Number(loginUserId) : false
 
     return (
         <div 
-            key={commentId} 
             className={styles.commentContainer}
         >
             { isOwner &&
