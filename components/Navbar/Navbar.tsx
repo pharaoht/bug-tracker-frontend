@@ -11,6 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { connectSocket, disconnectSocket } from '@/sockets';
 import { notificationsApi } from '@/api/Notifications/notifications.api';
 import Notifications from '../Notfications/Notifications';
+import Searchbar from '../Searchbar/Searchbar';
 
 const Navbar = () => {
 
@@ -97,14 +98,7 @@ const Navbar = () => {
     return (
         <nav className={styles.nav}>
             <form action="#">
-                <div className={`${styles.formInput}`}>
-                    <input type="search" placeholder="Search..." />
-                    <button type="submit" className={`${styles.searchBtn}`}>
-  
-                            <SearchIcon/>
-                        
-                    </button>
-                </div>
+                
             </form>
             <span>
                 {

@@ -9,11 +9,14 @@ interface TextInputPropTypes {
     labelTitle: string;
     isDisabled?: boolean;
     margin?: boolean;
+    inputType?: 'Search' | 'Form'
 }
 
-const TextInput = ({ placeholder, isRequired, onChangeHandler, labelTitle, inputNameAttribute, inputValueAttribute, isDisabled, margin }: TextInputPropTypes) => {
+const TextInput = ({ placeholder, isRequired, onChangeHandler, labelTitle, inputNameAttribute, inputValueAttribute, isDisabled, margin, inputType }: TextInputPropTypes) => {
 
    const bottomMargin = margin ? styles.noMargin : styles.margin;
+
+   const cssInput = inputType === 'Search' ? styles.searchInput : styles.formInput;
 
    return (
         <div className={`${styles.formGroup} ${bottomMargin}`}>
@@ -25,7 +28,7 @@ const TextInput = ({ placeholder, isRequired, onChangeHandler, labelTitle, input
             </label>
             <input
                 id={inputNameAttribute}
-                className={styles.inputElement}
+                className={cssInput}
                 type='text'
                 name={inputNameAttribute}
                 value={inputValueAttribute}

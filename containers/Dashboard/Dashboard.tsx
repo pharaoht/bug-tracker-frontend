@@ -28,7 +28,19 @@ const Dashboard = () => {
 
     const [ selectedIssueData, setSelectedIssueData ] = useState<ViewIssuePropTypes>(selectedDataObj);
 
-    const dashbaordContext = useContext(DashboardContext);
+    const dashboardContext = useContext(DashboardContext);
+
+    const lastQueryChanged = dashboardContext?.lastQueryChanged || '';
+
+    const apiParamString = dashboardContext?.paramString || '';
+
+    const contextSetIssues = dashboardContext?.setIssues || (()=>{});
+
+    const contextSetPagination = dashboardContext?.setPaginationFunc || (()=>{});
+
+    const conetextSetIssueTotalCount = dashboardContext?.setIssueCountTotalFun || (()=>{});
+
+    const conetectSetUrgentIssues = dashboardContext?.setUrgentIssuesData || (()=>{})
 
     const userProfileContext = useContext(UserContext);
 
@@ -36,7 +48,9 @@ const Dashboard = () => {
 
     const { isLoading: sortLoading, sendRequest: sortRequest, error: sortError } = useHttp();
 
-    const { getIssuesByPriority, getRecentIssues, getSortIssues } = issuesApi;
+    const { isLoading: searchLoading, sendRequest: searchRequest, error: searchError } = useHttp();
+
+    const { getIssuesByPriority, getRecentIssues, getSortIssues, getSearchIssues } = issuesApi;
 
     const createNewIssueHandler = () => {
 
@@ -48,29 +62,51 @@ const Dashboard = () => {
 
     const sortFunction = async () => {
 
-        return await getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sortRequest)
+        return await getSortIssues(apiParamString, contextSetIssues, sortRequest);
     }
 
-    useEffect(() => {
+    const searchFunction = async () => {
 
-      if(viewIssueOpen === false && isOpen === false){
-
-          Promise.all([
-            getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sortRequest),
-            getRecentIssues(dashbaordContext?.paramString || '',dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest),
-            getIssuesByPriority('high', dashbaordContext?.setUrgentIssuesData || (()=>{}), sendRequest),
+        const callback = (data: any[]) => {
     
-        ])
+            contextSetIssues(data);
+    
+            if(data) contextSetPagination(data);
 
-      }
+        }
+        return await getSearchIssues(apiParamString, callback, searchRequest);
+        
+    };
 
-    }, [ isOpen, viewIssueOpen ]);
+    const recentIssuesCb = (data: any[]) => {
+        if(data){
+            conetextSetIssueTotalCount(data);
+            contextSetPagination(data);
+        }
+    }
+
+    useEffect(()=>{
+
+        if(viewIssueOpen === false && isOpen === false){
+            Promise.all([
+                getRecentIssues(apiParamString, recentIssuesCb, sendRequest),
+                getIssuesByPriority('high',conetectSetUrgentIssues , sendRequest),
+            ])
+        }
+
+        if(lastQueryChanged === 'searchTerm') searchFunction();
+        else sortFunction();
+
+    },[isOpen, viewIssueOpen, ]);
+
 
     useEffect(() => {
-
-        sortFunction()
-        getRecentIssues(dashbaordContext?.paramString || '',dashbaordContext?.setIssueCountTotalFun || (() => {}), sendRequest)
-    }, [dashbaordContext?.queryParams])
+        if(lastQueryChanged === 'searchTerm') searchFunction();
+        else {
+            sortFunction();                 
+            getRecentIssues(apiParamString, recentIssuesCb, sendRequest)
+        }
+    }, [dashboardContext?.queryParams,])
   
     return (
         <section className={styles.container}>
@@ -80,12 +116,13 @@ const Dashboard = () => {
               title={breadCrumbProps.title}
               location={breadCrumbProps.location}
               pdfOnClick={() => {}}
+              searchLoading={searchLoading}
             />
 
             <ul className={styles.boxInfo}>
                 <Widget
                   loadingState={isLoading}
-                  value={String(dashbaordContext?.issueCountTotal) || '0'}
+                  value={String(dashboardContext?.issueCountTotal) || '0'}
                   title='Total Issues'
                   color='blue'
                   icon={<TicketIcon fontSize="large" />}
@@ -99,7 +136,7 @@ const Dashboard = () => {
                 />
                 <Widget
                   loadingState={isLoading}
-                  value={String(dashbaordContext?.urgentIssues?.length) || '0'}
+                  value={String(dashboardContext?.urgentIssues?.length) || '0'}
                   title='High Priority'
                   color='orange'
                   icon={<UrgentIcon fontSize="large"/>}
@@ -113,8 +150,9 @@ const Dashboard = () => {
                 />
             </ul>
             <Table 
-              loadingState={isLoading}
-              data={dashbaordContext?.issues || []}
+              sortApiLoadingState={sortLoading}
+              searchApiLoadingState={searchLoading}
+              data={dashboardContext?.issues || []}
               setSelectedIssueData={setSelectedIssueData}
               toggleViewIssueForm={setViewIssueOpen}
             />

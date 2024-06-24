@@ -2,13 +2,25 @@
 
 }
  
-.formGroup input{
+.formGroup .formInput{
     width: 100%;
     padding: .75rem 1rem;
     border: 1px solid var(--grey-d-1);
     outline: none;
     border-radius: .25rem;
     font-size: 1rem;
+}
+
+.formGroup .searchInput {
+    flex-grow: 1;
+    width: 400px;
+    padding: 0 16px;            
+    height: 35px;
+    border: none;
+    background: #fff;
+    border-radius: 36px 0 0 36px;
+    outline: none;
+    color: var(--dark);
 }
 
 .formGroup input::placeholder {

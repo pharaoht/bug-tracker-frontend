@@ -5,19 +5,18 @@ import CircularProgress from '@mui/material/CircularProgress';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMoreRounded';
 import Paginator from '../Paginator/Paginator';
-import { issuesApi } from '@/api/Issues/issues.api';
-import useHttp from '@/hooks/useHttp';
 import DashboardContext from '@/context/DashboardContext';
 import { thLabels } from '@/constants/costants';
 
 interface TablePropTypes {
     data: any[];
-    loadingState:boolean;
+    sortApiLoadingState: boolean;
+    searchApiLoadingState: boolean;
     setSelectedIssueData: (...args: any) => void;
     toggleViewIssueForm: (...args: any) => void;
 }
 
-const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }: TablePropTypes) => {
+const Table = ({ data, sortApiLoadingState, searchApiLoadingState, setSelectedIssueData, toggleViewIssueForm }: TablePropTypes) => {
 
     const tableData = data || [];
 
@@ -25,10 +24,6 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
     const [ isAsc, setIsAsc ] = useState<boolean>(false);
 
     const hasMounted = useRef(false); 
-
-    const { getSortIssues } = issuesApi;
-
-    const { isLoading, sendRequest, error } = useHttp()
 
     const dashbaordContext = useContext(DashboardContext);
 
@@ -49,11 +44,6 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
 
         return undefined;
     
-    }
-
-    const sortFunction = async () => {
-
-        return await getSortIssues(dashbaordContext?.paramString || '', dashbaordContext?.setIssues || (()=>{}), sendRequest)
     }
 
     const renderTableRow = () => tableData?.map((itm, idx) => 
@@ -86,6 +76,7 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
         {
             return (
                 <th key={itm.id} 
+                    style={{width:itm.width}}
                     className={styles.padTop}
                     onClick={() => thOnClickHandler(idx)}
                 >
@@ -122,12 +113,10 @@ const Table = ({ data, loadingState, setSelectedIssueData, toggleViewIssueForm }
                                 { renderTh() }
                             </tr>
                         </thead>
-                        <tbody>
-                            { tableData.length > 0 ? 
-                                renderTableRow() 
-                            : 
-                                ( loadingState || isLoading   ? <tr><td><CircularProgress/></td></tr> : <tr><td><span>No Issues</span></td></tr>)
-                            }
+                        <tbody className={styles.tbody}>
+                            { !searchApiLoadingState && !sortApiLoadingState && tableData?.length > 0 && renderTableRow() }
+                            { (searchApiLoadingState || sortApiLoadingState)  && <tr><td><CircularProgress size={'30px'}/></td></tr> }
+                            { !searchApiLoadingState && !sortApiLoadingState && tableData?.length == 0 && <tr><td><span>No Issues</span></td></tr>}
                         </tbody>
                     </table>
                 </div>

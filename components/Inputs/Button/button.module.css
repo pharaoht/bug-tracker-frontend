@@ -9,6 +9,22 @@
     border: none;
 }
 
+.searchBtn{
+    width: 36px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--blue);
+    color: var(--light);
+    font-size: 18px;
+    padding: 0 5px 0 5px;
+    border: none;
+    outline: none;
+    border-radius: 0 35px 35px 0;
+    cursor: pointer;
+}
+
 .small{
     height: 15px;
     padding: 7px 7.5px;
@@ -28,6 +44,13 @@
 }
 
 .buttonSkeleton:disabled {
+    background-color: var(--grey-d-1);
+    color: var(--grey-l-1);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.searchBtn:disabled {
     background-color: var(--grey-d-1);
     color: var(--grey-l-1);
     cursor: not-allowed;

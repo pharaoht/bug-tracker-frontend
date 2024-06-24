@@ -1,15 +1,17 @@
 import React from 'react';
 import styles from './breadcrumb.module.css';
 import Link from 'next/link';
+import Searchbar from '../Searchbar/Searchbar';
 
 interface BreadcrumbProps {
     title: string;
     location: string;
+    searchLoading: boolean;
     openModule: (...args: any) => void;
     pdfOnClick?: (...args: any) => void;
 }
 
-const Breadcrumb = ({ title, location, openModule, pdfOnClick} : BreadcrumbProps) => {
+const Breadcrumb = ({ title, location, searchLoading, openModule, pdfOnClick} : BreadcrumbProps) => {
   return (
     <div className={styles.headTitle}>
         <div className={styles.left}>
@@ -24,7 +26,9 @@ const Breadcrumb = ({ title, location, openModule, pdfOnClick} : BreadcrumbProps
                 </li>
             </ul>
         </div>
-
+        <div>
+            <Searchbar searchLoading={searchLoading} />
+        </div>
         <div className={styles.btnHolder}>
             
             <div className={styles.create} onClick={openModule}>

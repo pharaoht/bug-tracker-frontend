@@ -10,20 +10,23 @@ interface ButtonBtnPropTypes {
     buttonStyleColor?: 'orange' | 'yellow' | 'blue' | 'green' | 'red';
     loadingState?: boolean;
     isDisabled?: boolean;
-    size?: 'small' | 'medium' | 'large'
+    size?: 'small' | 'medium' | 'large' | 'search';
+    isSearch?: boolean
 }
 
 const ButtonBtn = (
-    { type, isDisabled, onClickHandler, buttonText, buttonIcon, buttonStyleColor, loadingState, size } : ButtonBtnPropTypes
+    { type, isDisabled, onClickHandler, buttonText, buttonIcon, buttonStyleColor, loadingState, size, isSearch } : ButtonBtnPropTypes
 ) => {
 
     const cssBtnColor = styles[buttonStyleColor || ''];
 
     const cssBtnSize = styles[size || 'medium'];
 
+    const buttnType = isSearch ? styles.searchBtn : styles.buttonSkeleton;
+
     return (
         <button
-            className={`${styles.buttonSkeleton} ${cssBtnColor} ${cssBtnSize}`}
+            className={`${buttnType} ${cssBtnColor} ${cssBtnSize}`}
             type={type}
             onClick={onClickHandler}
             disabled={loadingState || isDisabled || false}

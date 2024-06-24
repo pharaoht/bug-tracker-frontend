@@ -15,7 +15,9 @@ interface DashboardContextProps {
     pagination: {
         pageTotal: number;
         currentPage: number;
-    }
+    },
+    lastQueryChanged: string;
+    setPaginationFunc: (args: any) => void;
 }
 
 interface QueryParamTypes {
@@ -23,6 +25,7 @@ interface QueryParamTypes {
     offset: string,
     sortDirection: number,
     columnType: number;
+    searchTerm: string;
 }
 
 const DashboardContext = React.createContext<DashboardContextProps | null>(null)
@@ -35,6 +38,8 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
 
     const [ urgentIssues, setUrgentIssues ] = useState<any[]>([]);
 
+    const [ lastQueryChanged, setLastQueryChanged ] = useState<string>('');
+
     const [ pagination, setPagination ] = useState({
         pageTotal:1,
         currentPage:1
@@ -44,7 +49,8 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
         limit: '10',
         offset: '0',
         sortDirection: 0,
-        columnType: 2
+        columnType: 2,
+        searchTerm: ''
     });
 
     const generateQueryString = (): string => {
@@ -54,6 +60,7 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
             offset: queryParams.offset,
             sortDirection: sortDirection[queryParams.sortDirection],
             columnType: thLabels[queryParams.columnType].id,
+            searchTerm: queryParams.searchTerm,
         };
     
         const params = new URLSearchParams(queryParamsRecord).toString();
@@ -68,22 +75,27 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
 
     const setIssueCountTotalFun = ( data: any[] ) => {
 
-        setPagination({
-            pageTotal: data[0].totalPages,
-            currentPage: data[0].currentPage
-        })
-
         setIssueCountTotal(data[0].totalCount);
 
     }
 
-    const setQueryParamsFunc = ( keyName: string , value: any ): void => {
+    const setPaginationFunc = ( data: any[] ) => {
+        setPagination({
+            pageTotal: data[0].totalPages,
+            currentPage: data[0].currentPage
+        })
+    }
 
+    const setQueryParamsFunc = ( keyName: string , value: any ): void => {
         setQueryParams(prev => ({
             ...prev,
             [keyName]: value
         }));
 
+        if(lastQueryChanged !== keyName){
+
+            setLastQueryChanged(keyName);
+        }
         return undefined;
     };
 
@@ -100,7 +112,9 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
                     queryParams,
                     setQueryParamsFunc,
                     paramString,
-                    pagination
+                    pagination,
+                    lastQueryChanged,
+                    setPaginationFunc,
                 }}
             >
                 { children }
