@@ -6,10 +6,10 @@ import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import DashboardContext from '@/context/DashboardContext';
 
 interface searchbarProps {
-    searchLoading: boolean;
+
 }
 
-const Searchbar = ({ searchLoading }:searchbarProps) => {
+const Searchbar = ({  }:searchbarProps) => {
 
     const [ inputValue, setInputvalue ] = useState<string>('');
 

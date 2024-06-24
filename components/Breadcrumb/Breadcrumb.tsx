@@ -6,7 +6,7 @@ import Searchbar from '../Searchbar/Searchbar';
 interface BreadcrumbProps {
     title: string;
     location: string;
-    searchLoading: boolean;
+    searchLoading?: boolean;
     openModule: (...args: any) => void;
     pdfOnClick?: (...args: any) => void;
 }
@@ -27,7 +27,7 @@ const Breadcrumb = ({ title, location, searchLoading, openModule, pdfOnClick} : 
             </ul>
         </div>
         <div>
-            <Searchbar searchLoading={searchLoading} />
+            <Searchbar/>
         </div>
         <div className={styles.btnHolder}>
             
