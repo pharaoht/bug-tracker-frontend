@@ -19,10 +19,17 @@ const Searchbar = ({  }:searchbarProps) => {
 
     const onChangeHandler = ( event: ChangeEvent<HTMLInputElement> ) => { 
 
-        setInputvalue(event.target.value);
+        if(lastQuery !== 'searchTerm'){
 
+            dashboardContext?.setQueryParamsFunc('offset', 0);
+        }
+
+        setInputvalue(event.target.value);
+        
         dashboardContext?.setQueryParamsFunc('searchTerm', event.target.value);
-    }
+            
+    };
+
 
     useEffect(() => {
 

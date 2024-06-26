@@ -18,7 +18,11 @@ interface CommentProps {
 
 const Comment = ({ commentId, commentUserId, loginUserId, profileImageUrl, createdBy, isUserLogIn, commentDate, commentText,  onDeleteHandler, loadingState }: CommentProps ) => {
 
-    const isOwner = isUserLogIn ? Number(commentUserId) === Number(loginUserId) : false
+    const isOwner = isUserLogIn ? Number(commentUserId) === Number(loginUserId) : false;
+
+    const openModule = () => {
+        
+    }
 
     return (
         <div 
@@ -52,7 +56,7 @@ const Comment = ({ commentId, commentUserId, loginUserId, profileImageUrl, creat
             }
             <div className={styles.commentHeader}>
 
-                <div className={styles.profileImage}>
+                <div className={styles.profileImage} onClick={() => {}}>
                     <Image width={25} height={25} src={profileImageUrl} alt={`${createdBy}'s profile`} />
                 </div>
     

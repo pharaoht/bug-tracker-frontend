@@ -12,11 +12,13 @@ interface TablePropTypes {
     data: any[];
     sortApiLoadingState: boolean;
     searchApiLoadingState: boolean;
+    sortError: string;
+    searchError: string;
     setSelectedIssueData: (...args: any) => void;
     toggleViewIssueForm: (...args: any) => void;
 }
 
-const Table = ({ data, sortApiLoadingState, searchApiLoadingState, setSelectedIssueData, toggleViewIssueForm }: TablePropTypes) => {
+const Table = ({ data, sortApiLoadingState, searchApiLoadingState, sortError, searchError, setSelectedIssueData, toggleViewIssueForm }: TablePropTypes) => {
 
     const tableData = data || [];
 
@@ -98,7 +100,7 @@ const Table = ({ data, sortApiLoadingState, searchApiLoadingState, setSelectedIs
             )
         }
     )
-
+    console.log(tableData)
     
     return (
             <div className={styles.tableData}>
@@ -114,9 +116,10 @@ const Table = ({ data, sortApiLoadingState, searchApiLoadingState, setSelectedIs
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
+                            { (searchError || sortError ) && !searchApiLoadingState && !sortApiLoadingState && <tr><td>{searchError || sortError}</td></tr>}
                             { !searchApiLoadingState && !sortApiLoadingState && tableData?.length > 0 && renderTableRow() }
                             { (searchApiLoadingState || sortApiLoadingState)  && <tr><td><CircularProgress size={'30px'}/></td></tr> }
-                            { !searchApiLoadingState && !sortApiLoadingState && tableData?.length == 0 && <tr><td><span>No Issues</span></td></tr>}
+                            { !searchError && !sortError && !searchApiLoadingState && !sortApiLoadingState && tableData?.length == 0 && <tr><td><span>No Issues</span></td></tr>}
                         </tbody>
                     </table>
                 </div>

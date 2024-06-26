@@ -88,25 +88,22 @@ const Dashboard = () => {
     useEffect(()=>{
 
         if(viewIssueOpen === false && isOpen === false){
+
             Promise.all([
                 getRecentIssues(apiParamString, recentIssuesCb, sendRequest),
                 getIssuesByPriority('high',conetectSetUrgentIssues , sendRequest),
             ])
         }
 
-        if(lastQueryChanged === 'searchTerm') searchFunction();
-        else sortFunction();
-
-    },[isOpen, viewIssueOpen, ]);
-
+    },[ isOpen, viewIssueOpen ]);
 
     useEffect(() => {
-        if(lastQueryChanged === 'searchTerm') searchFunction();
-        else {
-            sortFunction();                 
-            getRecentIssues(apiParamString, recentIssuesCb, sendRequest)
+        if(viewIssueOpen === false && isOpen === false){
+            if(lastQueryChanged === 'searchTerm') searchFunction();
+            else sortFunction();
         }
-    }, [dashboardContext?.queryParams,])
+    }, [ dashboardContext?.queryParams, isOpen, viewIssueOpen ])
+
   
     return (
         <section className={styles.container}>
@@ -153,6 +150,8 @@ const Dashboard = () => {
               sortApiLoadingState={sortLoading}
               searchApiLoadingState={searchLoading}
               data={dashboardContext?.issues || []}
+              sortError={sortError}
+              searchError={searchError}
               setSelectedIssueData={setSelectedIssueData}
               toggleViewIssueForm={setViewIssueOpen}
             />
