@@ -1,5 +1,6 @@
-import React, {useState, useCallback} from 'react';
+import { useState  } from 'react';
 import axios from 'axios';
+import { dalServiceType } from '@/dal/Dal';
 
 interface useHttpType {
     requestConfig: {
@@ -12,6 +13,7 @@ interface useHttpType {
     };
     callback: (...args: any) => void;
     isMultiPart?: boolean | null;
+    dalService?: dalServiceType | null;
 }
 
 const useHttp = () => {
@@ -19,7 +21,8 @@ const useHttp = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     
-    const sendRequest = async ({ requestConfig, callback, isMultiPart }: useHttpType,) => {
+    const sendRequest = async ({ requestConfig, callback, isMultiPart, dalService }: useHttpType,) => {
+
         setIsLoading(true);
         setError('');
 
@@ -40,9 +43,17 @@ const useHttp = () => {
             }
 
             if(response.status !== 200){ throw new Error('Request failed') }
-            
-            callback(response.data);
 
+            if(dalService) {
+  
+                const dto = dalService.fromDto(response.data);
+
+                callback(dto);
+
+            }
+            else {                
+                callback(response.data);
+            }
         }
         catch (err: any) { 
 

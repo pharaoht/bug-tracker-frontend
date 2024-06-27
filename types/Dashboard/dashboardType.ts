@@ -2,8 +2,14 @@ export interface ViewIssuePropTypes {
     id: string,
     title: string,
     description: string,
-    status: string,
-    priority: string,
+    status: {
+        value: string,
+        display: string,
+    },
+    priority: {
+        value: string,
+        display: string,
+    },
     createdAt: string,
     team: string,
     teamId: string,

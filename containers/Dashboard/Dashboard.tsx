@@ -18,7 +18,7 @@ import { ViewIssuePropTypes } from '@/types/Dashboard/dashboardType';
 
 const breadCrumbProps = { title: 'Dashboard', location: 'Home', }
 
-const selectedDataObj = { id: '', title: '', description: '', status: '', priority: '', createdAt: '', team: '', teamId: '', userId: '', imageUrl: '', createdBy: '' }
+const selectedDataObj = { id: '', title: '', description: '', status: { value: '', display: ''}, priority: { value: '', display: ''}, createdAt: '', team: '', teamId: '', userId: '', imageUrl: '', createdBy: '' }
 
 const Dashboard = () => {
 
@@ -68,21 +68,36 @@ const Dashboard = () => {
     const searchFunction = async () => {
 
         const callback = (data: any[]) => {
+            
+            
+            if(data.length > 0) {
     
-            contextSetIssues(data);
+                contextSetIssues(data);
     
-            if(data) contextSetPagination(data);
+                const info = {
+                    totalCount: data[0].totalCount,
+                    currentPage: data[0].currentPage,
+                    totalPages: data[0].totalPages,
+                }
+                contextSetPagination(info);
+                return
+            };
 
+            contextSetIssues([])
         }
         return await getSearchIssues(apiParamString, callback, searchRequest);
         
     };
 
     const recentIssuesCb = (data: any[]) => {
-        if(data){
-            conetextSetIssueTotalCount(data);
-            contextSetPagination(data);
+        const info = {
+            totalCount: data[0].totalCount,
+            currentPage: data[0].currentPage,
+            totalPages: data[0].totalPages,
         }
+        conetextSetIssueTotalCount(info);
+        contextSetPagination(info);
+
     }
 
     useEffect(()=>{
@@ -98,9 +113,14 @@ const Dashboard = () => {
     },[ isOpen, viewIssueOpen ]);
 
     useEffect(() => {
+    
         if(viewIssueOpen === false && isOpen === false){
             if(lastQueryChanged === 'searchTerm') searchFunction();
-            else sortFunction();
+            else {
+                sortFunction();
+                Promise.all([
+                getRecentIssues(apiParamString, recentIssuesCb, sendRequest)])
+            }
         }
     }, [ dashboardContext?.queryParams, isOpen, viewIssueOpen ])
 

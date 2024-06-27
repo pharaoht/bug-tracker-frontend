@@ -140,37 +140,37 @@
     text-align: left;                    
 }
 
-.LOW {
+.low {
 
     background: var(--blue);
 }
 
-.MEDIUM {
+.medium {
 
     background: var(--yellow);
 }
 
-.HIGH {
+.high {
 
     background: var(--orange);
 }
 
-.OPEN{
+.open{
 
     background: var(--blue);
 }
-.UNDER_REVIEW{
+.under_review{
     background: var(--purple);
 }
 
-.IN_PROGRESS{
+.in_progress{
     background: var(--yellow);
 }
 
-.COMPLETED{
+.completed{
     background: var(--green);
 }
 
-.CLOSED{
+.closed{
     background: var(--brown);
 }

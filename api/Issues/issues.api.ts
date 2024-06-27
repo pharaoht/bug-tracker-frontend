@@ -1,6 +1,9 @@
 import { formStateType } from "@/types/Dashboard/dashboardType";
+import initIssueDataAccessLayer from '@/dal/Issues/Issues.dal';
 
-const devDomain = 'localhost:3000'
+const devDomain = 'localhost:3000';
+
+const issueDal = initIssueDataAccessLayer();
 
 const getIssuesByTeam = async (
 
@@ -27,7 +30,7 @@ const getRecentIssues = async (
 
     }
 
-    await httpRequest({requestConfig: requestObj, callback: contextSetter});
+    await httpRequest({requestConfig: requestObj, callback: contextSetter, dalService: issueDal});
 
     return undefined;
 };
@@ -50,7 +53,7 @@ const getSortIssues = async (
         withCredentials: true 
     }
 
-    await httpRequest({requestConfig: requestConfig, callback: contextSetter});
+    await httpRequest({requestConfig: requestConfig, callback: contextSetter, dalService: issueDal});
 }
 
 const getSearchIssues = async (
@@ -69,7 +72,7 @@ const getSearchIssues = async (
         withCredentials: true 
     }
 
-    await httpRequest({requestConfig: requestConfig, callback: contextSetter});
+    await httpRequest({requestConfig: requestConfig, callback: contextSetter, dalService: issueDal});
 }
 
 const getIssuesByStatus = async (

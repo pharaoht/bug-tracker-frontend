@@ -73,16 +73,17 @@ export const DashboardContextProvider: React.FC<DashboardContextProviderProps> =
         setUrgentIssues(data);
     };
 
-    const setIssueCountTotalFun = ( data: any[] ) => {
+    const setIssueCountTotalFun = ( data: { totalCount: string} ) => {
 
-        setIssueCountTotal(data[0].totalCount);
+        setIssueCountTotal(data?.totalCount);
 
     }
 
-    const setPaginationFunc = ( data: any[] ) => {
+    const setPaginationFunc = (  data: { totalPages: number, currentPage: number} ) => {
+
         setPagination({
-            pageTotal: data[0].totalPages,
-            currentPage: data[0].currentPage
+            pageTotal: data.totalPages,
+            currentPage: data.currentPage
         })
     }
 

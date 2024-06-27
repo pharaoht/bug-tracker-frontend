@@ -18,8 +18,14 @@ interface ViewIssuePropTypes {
     id: string,
     title: string,
     description: string,
-    status: string,
-    priority: string,
+    status: {
+        value: string,
+        display: string,
+    },
+    priority: {
+        value: string,
+        display: string,
+    },
     createdAt: string,
     team: string,
     teamId: string,
@@ -63,8 +69,8 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
         id: issueData.id,
         title: issueData.title,
         description: issueData.description,
-        status: issueData.status.toLowerCase().replace(/ /,'_'),
-        priority: issueData.priority.toLowerCase(),
+        status: issueData.status.value,
+        priority: issueData.priority.value,
         userId: issueData.userId,
         teamId:issueData.teamId,
     });
@@ -101,7 +107,7 @@ const ViewIssue = ( { selectedIssueData, toggleViewIssueForm }: ViewIssuePropTyp
 
     const isDisabled = id == issueData.userId ? false : true;
 
-    const isClosed = issueData?.status === 'CLOSED' ? true : false;
+    const isClosed = issueData?.status.display === 'CLOSED' ? true : false;
 
     const formStateKeys = Object.keys(formState);
 

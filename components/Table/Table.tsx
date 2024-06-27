@@ -49,9 +49,9 @@ const Table = ({ data, sortApiLoadingState, searchApiLoadingState, sortError, se
     }
 
     const renderTableRow = () => tableData?.map((itm, idx) => 
-
+    
         {
-            const cssStatusName = itm.status.includes(' ') ? itm.status.replace(/ /, '_') : itm.status
+            const cssStatusName = itm.status.value;
 
             return (
                 <tr key={itm.id} 
@@ -67,8 +67,8 @@ const Table = ({ data, sortApiLoadingState, searchApiLoadingState, sortError, se
                     </td>
                     <td>{itm.title}</td>
                     <td>{itm.createdAt}</td>
-                    <td><span className={`${styles.highLight} ${styles[cssStatusName]}`}>{itm.status}</span></td>
-                    <td><span className={`${styles.highLight} ${styles[itm.priority]}`}>{itm.priority}</span></td>
+                    <td><span className={`${styles.highLight} ${styles[cssStatusName]}`}>{itm.status.display}</span></td>
+                    <td><span className={`${styles.highLight} ${styles[itm.priority.value]}`}>{itm.priority.display}</span></td>
                 </tr>
             )
         }
@@ -100,7 +100,6 @@ const Table = ({ data, sortApiLoadingState, searchApiLoadingState, sortError, se
             )
         }
     )
-    console.log(tableData)
     
     return (
             <div className={styles.tableData}>
