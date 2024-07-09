@@ -6,6 +6,8 @@ import styles from './commentBoard.module.css';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { commentApi } from '@/api/Comments/comments.api';
 import useHttp from '@/hooks/useHttp';
+import ContainerModal from '../Modal/Modal';
+import UserProfile from '../UserProfile/UserProfile';
 
 interface CommentData {
     id: number,
@@ -194,6 +196,9 @@ const CommentBoard = ( { commentData, isLoading, isLoggedIn, userId, issueId, to
                 }
 
             </div>
+            <ContainerModal isOpen={false} onClose={() => null}>
+                <UserProfile />
+            </ContainerModal>
         </div>
     )
 };

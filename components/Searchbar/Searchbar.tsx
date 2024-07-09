@@ -6,10 +6,10 @@ import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import DashboardContext from '@/context/DashboardContext';
 
 interface searchbarProps {
-
+    placeHolder: string;
 }
 
-const Searchbar = ({  }:searchbarProps) => {
+const Searchbar = ({  placeHolder }:searchbarProps) => {
 
     const [ inputValue, setInputvalue ] = useState<string>('');
 
@@ -44,7 +44,7 @@ const Searchbar = ({  }:searchbarProps) => {
     return (
         <div className={styles.containerSearch}>
             <TextInput 
-                placeholder='Search Issues'
+                placeholder={placeHolder}
                 isRequired={false}
                 labelTitle=''
                 onChangeHandler={(event) => onChangeHandler(event)}

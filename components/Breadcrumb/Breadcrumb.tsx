@@ -7,11 +7,13 @@ interface BreadcrumbProps {
     title: string;
     location: string;
     searchLoading?: boolean;
+    greenBtnTitle: string;
+    searchPlaceHolder: string;
     openModule: (...args: any) => void;
     pdfOnClick?: (...args: any) => void;
 }
 
-const Breadcrumb = ({ title, location, searchLoading, openModule, pdfOnClick} : BreadcrumbProps) => {
+const Breadcrumb = ({ title, location, searchLoading, greenBtnTitle, searchPlaceHolder, openModule, pdfOnClick} : BreadcrumbProps) => {
   return (
     <div className={styles.headTitle}>
         <div className={styles.left}>
@@ -27,12 +29,12 @@ const Breadcrumb = ({ title, location, searchLoading, openModule, pdfOnClick} : 
             </ul>
         </div>
         <div>
-            <Searchbar/>
+            <Searchbar placeHolder={searchPlaceHolder}/>
         </div>
         <div className={styles.btnHolder}>
             
             <div className={styles.create} onClick={openModule}>
-                <span className={styles.text}>Create Issue</span>
+                <span className={styles.text}>{greenBtnTitle}</span>
             </div >
 
             <div className={styles.btnDownload} onClick={pdfOnClick}>

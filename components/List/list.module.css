@@ -1,0 +1,38 @@
+.container{
+    background-color: white;
+    width: 30%;
+    height: 550px;
+    border-radius: 25px;
+    padding: 15px;
+}
+
+.container h2{
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.ulContainer{
+}
+
+.liContainer{
+    display: flex;
+    height: 50px;
+    cursor: pointer;
+}
+
+.liImage img {
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.liInfo span{
+    
+    font-weight: 600;
+}
+
+.liInfo p{
+    font-weight: 400;
+    font-size: 13px;
+}

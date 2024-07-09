@@ -9,7 +9,7 @@ const UserProfile = () => {
                 <div className={styles.profileHeader}>
                     <Image src={'/'} width={50} height={50}alt="User" className={styles.profileImg} />
                     <h2>Lucia Alvarez</h2>
-                    <p>Photographer</p>
+                    <p>Team Alpha</p>
                 </div>
                 <div className={styles.profileInfo}>
                     <div className={styles.infoSection}>

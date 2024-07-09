@@ -34,6 +34,8 @@ const Issues = () => {
               openModule={()=> null}
               title={breadCrumbProps.title}
               location={breadCrumbProps.location}
+              searchPlaceHolder='Search issues'
+              greenBtnTitle='Create Issue'
             />
             <ul className={styles.boxInfo}>
                 <Widget

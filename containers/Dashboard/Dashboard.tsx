@@ -15,6 +15,7 @@ import UserContext from '@/context/UserContext';
 import CreateIssue from '@/components/Forms/CreateIssue/CreateIssue';
 import ViewIssue from '@/components/Forms/ViewIssue/ViewIssue';
 import { ViewIssuePropTypes } from '@/types/Dashboard/dashboardType';
+import { messagesApi } from '@/api/Messages/messages.api';
 
 const breadCrumbProps = { title: 'Dashboard', location: 'Home', }
 
@@ -25,6 +26,8 @@ const Dashboard = () => {
     const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
     const [ viewIssueOpen, setViewIssueOpen ] = useState<boolean>(false);
+
+    const [ messages, setMessages ] = useState<any[]>([])
 
     const [ selectedIssueData, setSelectedIssueData ] = useState<ViewIssuePropTypes>(selectedDataObj);
 
@@ -44,13 +47,21 @@ const Dashboard = () => {
 
     const userProfileContext = useContext(UserContext);
 
+    const userProfile = userProfileContext?.userInfo && userProfileContext?.userInfo[0] || {};
+
+    const token = userProfileContext?.token || '';
+
     const { isLoading, sendRequest, error } = useHttp();
 
     const { isLoading: sortLoading, sendRequest: sortRequest, error: sortError } = useHttp();
 
     const { isLoading: searchLoading, sendRequest: searchRequest, error: searchError } = useHttp();
+    
+    const { isLoading: messagesLoading, sendRequest: messageRequest, error: messageError } = useHttp();
 
     const { getIssuesByPriority, getRecentIssues, getSortIssues, getSearchIssues } = issuesApi;
+
+    const { getMessagesById } = messagesApi;
 
     const createNewIssueHandler = () => {
 
@@ -59,6 +70,11 @@ const Dashboard = () => {
         setIsOpen(true)
 
     };
+
+    const getMessages = async () => {
+
+        if(userProfileContext?.isLoggedIn === false) return;
+    }
 
     const sortFunction = async () => {
 
@@ -134,6 +150,8 @@ const Dashboard = () => {
               location={breadCrumbProps.location}
               pdfOnClick={() => {}}
               searchLoading={searchLoading}
+              greenBtnTitle='Create Issue'
+              searchPlaceHolder='Search issues'
             />
 
             <ul className={styles.boxInfo}>
