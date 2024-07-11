@@ -6,6 +6,8 @@ import MessageBoard from '@/components/MessageBoard/MessageBoard';
 import useHttp from '@/hooks/useHttp';
 import UserContext from '@/context/UserContext';
 import { messagesApi } from '@/api/Messages/messages.api';
+import ContainerModal from '@/components/Modal/Modal';
+import CreateChat from '@/components/Forms/CreateChat/CreateChat';
 
 export interface selectedUserProps {
     userId: string,
@@ -24,6 +26,8 @@ const Messages = () => {
         userName: '',
         newMessage: false,
     });
+
+    const [ isOpen, setIsOpen ] = useState<boolean>(false);
 
     const [ chats, setChats ] = useState<any[]>([])
 
@@ -58,11 +62,20 @@ const Messages = () => {
         }
 
         await getMessagesById(id, token, selectedUser.userId, setChats, conversationRequest);
+    };
+
+    const openModal = () => {
+    
+        if(!isLoggedIn){
+            alert('You must log in');
+            return undefined
+        }
+        setIsOpen(true)
     }
 
     useEffect(() => {
         getConversations()
-    }, []);
+    }, [ isOpen]);
 
     useEffect(() => {
         if(selectedUser.userId !== ''){
@@ -70,6 +83,7 @@ const Messages = () => {
         }
 
         if(selectedUser.newMessage){
+            getConversations()
             setSelectedUser(prev => ({...prev, newMessage: false}))
         } 
             
@@ -78,11 +92,12 @@ const Messages = () => {
     return (
         <section className={styles.section}>
             <Breadcrumb
-                openModule={()=>{}}
+                openModule={openModal}
                 title='Messages'
                 location='Home'
-                greenBtnTitle='Create Message'
+                greenBtnTitle='Create Chat'
                 searchPlaceHolder='Search messages'
+                
             />
             <div className={styles.container}>
                 <List 
@@ -93,13 +108,16 @@ const Messages = () => {
                 />
                 <MessageBoard
                     selectedUser={selectedUser}
-                    chats={chats}
+                    chats={chats || []}
                     ownerId={id || ''}
                     loadConversations={loadConversations}
                     token={token}
                     setSelectedUser={setSelectedUser}
                 />
             </div>
+            <ContainerModal isOpen={isOpen} onClose={() => setIsOpen}>
+                <CreateChat formToggle={setIsOpen} logginId={id} token={token}/>
+            </ContainerModal>
         </section>
     )
 }

@@ -1,6 +1,6 @@
 .container{
     background-color: white;
-    width: 30%;
+    width: 35%;
     height: 550px;
     border-radius: 25px;
     padding: 15px;
@@ -13,12 +13,21 @@
 }
 
 .ulContainer{
+    height: 90%;
+    overflow-y: auto;
 }
 
 .liContainer{
+    padding: 5px;
     display: flex;
     height: 50px;
     cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.liContainer:hover{
+    background-color: var(--grey);
+    border-radius: 5px;
 }
 
 .liImage img {

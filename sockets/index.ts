@@ -18,6 +18,10 @@ export const connectSocket = ( userId: string, setNotifications: React.Dispatch<
         setNotifications(prev => [data.message, ...prev]);
     })
 
+    socket.on('newMessageSent', () => {
+        //get Message Function
+    })
+
     socket.emit('userConnected', userId);
 
 };

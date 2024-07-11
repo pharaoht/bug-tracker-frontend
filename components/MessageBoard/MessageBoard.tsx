@@ -26,6 +26,10 @@ const MessageBoard = ({ selectedUser, chats, ownerId, loadConversations, token, 
     const { postCreateMessage } = messagesApi;
 
     const isBtnDisabled = messageInput.length == 0 ? true : false;
+
+    const isUserSelected = selectedUser.userId !== '' && chats.length > 0;
+
+    const areMessagesReceived = chats?.length > 0 && !loadConversations && ownerId;
     
     const isFromOwner = ( senderId: string, ownerId: string ): string => {
 
@@ -36,7 +40,7 @@ const MessageBoard = ({ selectedUser, chats, ownerId, loadConversations, token, 
         return styles.otherUser;
     };
 
-    const submitHandler = ( event: React.MouseEvent<HTMLButtonElement> ) => {
+    const submitHandler = async ( event: React.MouseEvent<HTMLButtonElement> ) => {
 
         event.preventDefault();
     
@@ -50,7 +54,7 @@ const MessageBoard = ({ selectedUser, chats, ownerId, loadConversations, token, 
             return
         }
 
-        postCreateMessage(token, body, sendRequest, cb);
+        await postCreateMessage(token, body, sendRequest, cb);
 
         setMessageInput('');
 
@@ -68,67 +72,80 @@ const MessageBoard = ({ selectedUser, chats, ownerId, loadConversations, token, 
         setMessageInput(value);
     };
 
+    const renderProfilebar = (): React.ReactNode => (
+        <div className={styles.profileBar}>
+            <div className={styles.details}>
+                <span>
+                    <Image src={selectedUser?.userImage} alt='user_image' height={45} width={45} />
+                </span>
+                <span className={styles.text}>
+                    {selectedUser.userName}
+                </span>
+            </div>
+            <div className={styles.actions}>
+                
+            </div>
+        </div>
+    );
+
+    const renderMessages = (): React.ReactNode => (
+        <div className={styles.chatContainer}>
+            { chats?.map((message, index) => (
+                <div
+                    key={message.id}
+                    className={`${styles.message} ${isFromOwner(message.senderId, ownerId)}`}
+                >
+                    <p className={styles.messageText}>
+                        {message.messageText}
+                    </p>
+                    <span className={styles.timestamp}>{message.createdAt}</span>
+                </div>
+            ))}
+        </div>
+    );
+
+    const renderInputbar = (): React.ReactNode => (
+        <div className={styles.inputSection}>
+
+            <div style={{width:'100%'}}>
+                <TextInput
+                    inputNameAttribute='message'
+                    inputValueAttribute={messageInput}
+                    placeholder={'Send a message'}
+                    onChangeHandler={onChangeHandler}
+                    isRequired={false}
+                    labelTitle=''
+                    margin={true}
+                    isDisabled={false}
+                />
+            </div>
+            <ButtonBtn
+                type='button'
+                isDisabled={isBtnDisabled}
+                loadingState={isLoading}
+                onClickHandler={submitHandler}
+                buttonText='Send'
+                buttonStyleColor='blue'
+            />
+        </div>
+    );
+
+    const renderFallBack = ( fallBack: React.ReactNode | string ): React.ReactNode => (
+        <span className={styles.noChats}>{fallBack}</span> 
+    )
+
     return (
         <div className={styles.container}>
 
-            { selectedUser.userId !== '' && chats.length !== 0 &&
-                <div className={styles.profileBar}>
-                    <div className={styles.details}>
-                        <span>
-                            <Image src={selectedUser?.userImage} alt='user_image' height={45} width={45} />
-                        </span>
-                        <span className={styles.text}>
-                            {selectedUser.userName}
-                        </span>
-                    </div>
-                    <div className={styles.actions}>
-                       
-                    </div>
-                </div>
-            }
+            { isUserSelected && renderProfilebar() }
 
-            <div className={styles.chatContainer}>
-                { chats?.length > 0 && !loadConversations && ownerId && chats?.map((message, index) => (
-                    <div
-                        key={index}
-                        className={`${styles.message} ${isFromOwner(message.senderId, ownerId)}`}
-                    >
-                        <p className={styles.messageText}>
-                            {message.messageText}
-                        </p>
-                        <span className={styles.timestamp}>{message.createdAt}</span>
-                    </div>
-                ))}
+            { areMessagesReceived && renderMessages() }
 
-                { (selectedUser.userId == '' && chats.length == 0) && !ownerId && <span className={styles.noChats}>No chat selected</span>}
-                { loadConversations && <span className={styles.noChats}><CircularProgress/></span> }
-            </div>
+            { !areMessagesReceived && !loadConversations && renderFallBack('No Chats Selected') }
 
-            { selectedUser.userId !== '' && chats.length !== 0 &&
-                <div className={styles.inputSection}>
+            { loadConversations && renderFallBack(<CircularProgress/>) }
 
-                    <div style={{width:'100%'}}>
-                        <TextInput
-                            inputNameAttribute='message'
-                            inputValueAttribute={messageInput}
-                            placeholder={'Send a message'}
-                            onChangeHandler={onChangeHandler}
-                            isRequired={false}
-                            labelTitle=''
-                            margin={true}
-                            isDisabled={false}
-                        />
-                    </div>
-                    <ButtonBtn
-                        type='button'
-                        isDisabled={isBtnDisabled}
-                        loadingState={isLoading}
-                        onClickHandler={submitHandler}
-                        buttonText='Send'
-                        buttonStyleColor='blue'
-                    />
-                </div>
-            }
+            { areMessagesReceived && renderInputbar() }
 
         </div>
     )

@@ -10,7 +10,7 @@
 
 .chatContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     padding: 20px;
     overflow-y: scroll;
     height: 75%;
