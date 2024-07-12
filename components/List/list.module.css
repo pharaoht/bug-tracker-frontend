@@ -36,9 +36,28 @@
     margin-right: 10px;
 }
 
-.liInfo span{
+.liInfo div span{
     
     font-weight: 600;
+}
+
+.liInfo{
+    width: 100%;
+}
+
+.smallTxt{
+    font-size: 0.5em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background-color: var(--light-blue);
+    padding: 4px;
+    border-radius: 20px;
+}
+
+.messageInfo{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .liInfo p{

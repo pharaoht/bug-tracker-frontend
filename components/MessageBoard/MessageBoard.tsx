@@ -1,12 +1,12 @@
-import React, { ChangeEvent, useState } from 'react';
-import styles from './messageBoard.module.css';
 import Image from 'next/image';
-import { selectedUserProps } from '@/containers/Messages/Messages';
-import TextInput from '../Inputs/TextInput/TextInput';
-import ButtonBtn from '../Inputs/Button/Button';
-import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 import useHttp from '@/hooks/useHttp';
+import styles from './messageBoard.module.css';
+import ButtonBtn from '../Inputs/Button/Button';
+import React, { ChangeEvent, useState } from 'react';
+import TextInput from '../Inputs/TextInput/TextInput';
 import { messagesApi } from '@/api/Messages/messages.api';
+import { selectedUserProps } from '@/containers/Messages/Messages';
+import CircularProgress from '@mui/material/CircularProgress/CircularProgress';
 
 interface MessageBoardPropTypes {
     selectedUser: selectedUserProps;
@@ -27,9 +27,11 @@ const MessageBoard = ({ selectedUser, chats, ownerId, loadConversations, token, 
 
     const isBtnDisabled = messageInput.length == 0 ? true : false;
 
-    const isUserSelected = selectedUser.userId !== '' && chats.length > 0;
+    const isUserSelected = selectedUser.userId !== '' && chats.length > 0 && !error;
 
-    const areMessagesReceived = chats?.length > 0 && !loadConversations && ownerId;
+    const areMessagesReceived = chats?.length > 0 && !loadConversations && ownerId && !error;
+
+    const noMessages = chats?.length === 0 && !loadConversations && !error
     
     const isFromOwner = ( senderId: string, ownerId: string ): string => {
 
@@ -141,9 +143,11 @@ const MessageBoard = ({ selectedUser, chats, ownerId, loadConversations, token, 
 
             { areMessagesReceived && renderMessages() }
 
-            { !areMessagesReceived && !loadConversations && renderFallBack('No Chats Selected') }
+            { noMessages && renderFallBack('No Chats Selected') }
 
-            { loadConversations && renderFallBack(<CircularProgress/>) }
+            { !error && loadConversations && renderFallBack(<CircularProgress/>) }
+
+            { error && renderFallBack(error) }
 
             { areMessagesReceived && renderInputbar() }
 

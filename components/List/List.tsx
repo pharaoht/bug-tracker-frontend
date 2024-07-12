@@ -1,6 +1,6 @@
 import React from 'react';
-import styles from './list.module.css';
 import Image from 'next/image';
+import styles from './list.module.css';
 import MessageIcon from '@mui/icons-material/Message';
 import { selectedUserProps } from '@/containers/Messages/Messages';
 
@@ -10,9 +10,11 @@ interface ListPropTypes {
     isLogin: boolean;
     title: string;
     setSelectedUser: React.Dispatch<React.SetStateAction<selectedUserProps>>;
+    isError: string;
+    logginId: string;
 }
 
-const List = ({ listData, isLogin, title, setSelectedUser }: ListPropTypes) => {
+const List = ({ listData, isLogin, title, setSelectedUser, isError, logginId } : ListPropTypes) => {
 
     const onClickHandler = (userId: string, userImage: string, receiverName: string) => {
         setSelectedUser(prev => ({
@@ -36,14 +38,21 @@ const List = ({ listData, isLogin, title, setSelectedUser }: ListPropTypes) => {
             
                 <li key={itm.id} 
                     className={styles.liContainer} 
-                    onClick={() => onClickHandler(itm.receiverId, itm.receiverImageUrl, itm.receiverName)}>
-                   
+                    onClick={() => onClickHandler(itm.receiverId, itm.receiverImageUrl, itm.receiverName)}
+                >
                     <div className={styles.liImage}>
                         <Image src={itm.receiverImageUrl} alt='user_image' height={40} width={40}/>
                     </div>
 
                     <div className={styles.liInfo}>
-                        <span>{itm.receiverName}</span>
+                        <div className={styles.messageInfo}>
+                            <span>{itm.receiverName}</span>
+                            {
+                                
+                                itm.isRead === false && itm.senderId !== logginId && <span className={styles.smallTxt}>New Message</span>
+                            }
+                            
+                        </div>
                         <p><MessageIcon sx={{ fontSize: '13px', color: 'grey' }}/> {truncateText(itm.messageText)}</p>
                     </div>
     
@@ -55,8 +64,9 @@ const List = ({ listData, isLogin, title, setSelectedUser }: ListPropTypes) => {
     return (
         <div className={styles.container}>
             <h2>{title}</h2>
-            { !isLogin && 'Not logged in'}
-            { isLogin && listData.length > 0 && renderList() }
+            { isError !== '' && isError}
+            { !isError && !isLogin && 'Not logged in'}
+            { !isError && isLogin && listData.length > 0 && renderList() }
         </div>
     )
 };

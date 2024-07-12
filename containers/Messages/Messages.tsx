@@ -41,7 +41,7 @@ const Messages = () => {
 
     const { id } = userProfile || {};
 
-    const { getLatestConversations, getMessagesById } = messagesApi;
+    const { getLatestConversations, getMessagesById, putUpdateReadStatus } = messagesApi;
 
     const { isLoading: loadConversations, sendRequest: conversationRequest, error: conversationError } = useHttp();
 
@@ -64,6 +64,19 @@ const Messages = () => {
         await getMessagesById(id, token, selectedUser.userId, setChats, conversationRequest);
     };
 
+    const setMessagesAsRead = async () => {
+    
+        if(!isLoggedIn || !token ){
+            return undefined
+        };
+
+        const callback = () => {
+            return
+        }
+
+        await putUpdateReadStatus(selectedUser.userId, id, token, conversationRequest, callback);
+    }
+
     const openModal = () => {
     
         if(!isLoggedIn){
@@ -73,9 +86,7 @@ const Messages = () => {
         setIsOpen(true)
     }
 
-    useEffect(() => {
-        getConversations()
-    }, [ isOpen]);
+    useEffect(() => { getConversations() }, [ isOpen ]);
 
     useEffect(() => {
         if(selectedUser.userId !== ''){
@@ -83,11 +94,18 @@ const Messages = () => {
         }
 
         if(selectedUser.newMessage){
-            getConversations()
+            getConversations();
             setSelectedUser(prev => ({...prev, newMessage: false}))
         } 
             
-    }, [selectedUser])
+    }, [ selectedUser ]);
+
+    useEffect(() => {
+        if(selectedUser.userId !== '') {
+            setMessagesAsRead();
+            getConversations();
+        }
+    }, [ selectedUser.userId ])
 
     return (
         <section className={styles.section}>
@@ -105,6 +123,8 @@ const Messages = () => {
                     isLogin={isLoggedIn}
                     title='Chats'
                     setSelectedUser={setSelectedUser}
+                    isError={conversationError}
+                    logginId={id}
                 />
                 <MessageBoard
                     selectedUser={selectedUser}

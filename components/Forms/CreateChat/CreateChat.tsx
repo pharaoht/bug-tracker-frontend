@@ -1,11 +1,11 @@
-import { ChangeEvent, TextareaHTMLAttributes, useEffect, useState } from "react";
+import useHttp from "@/hooks/useHttp";
 import styles from './createChat.module.css';
+import { usersApi } from "@/api/Users/users.api";
+import { ChangeEvent, useEffect, useState } from "react";
+import { messagesApi } from "@/api/Messages/messages.api";
 import ButtonBtn from "@/components/Inputs/Button/Button";
 import TextAreaInput from "@/components/Inputs/TextArea/TextArea";
-import { usersApi } from "@/api/Users/users.api";
-import useHttp from "@/hooks/useHttp";
 import CustomSelect from "@/components/Inputs/CustomDropDown/CustomDropDown";
-import { messagesApi } from "@/api/Messages/messages.api";
 
 interface CreateChatPropTypes {
     logginId: string;
@@ -46,11 +46,9 @@ const CreateChat = ({ formToggle, logginId, token }: CreateChatPropTypes ) => {
                 return
             } 
 
-            alert('failed')
         }
 
         postCreateMessage(token, formState, sendRequest, cb);
-
         
     };
 
@@ -79,6 +77,12 @@ const CreateChat = ({ formToggle, logginId, token }: CreateChatPropTypes ) => {
             getUsers(),
         ]);
     }, [])
+
+    useEffect(()=>{
+        if(error){
+            alert(error)
+        }
+    }, [error])
 
     return (
         <form className={styles.form}>
@@ -114,7 +118,7 @@ const CreateChat = ({ formToggle, logginId, token }: CreateChatPropTypes ) => {
                 onClickHandler={(event) => submitHandler(event)}
                 buttonText='Send'
                 buttonIcon={''}
-                loadingState={false}
+                loadingState={isLoading}
             />
         </form>
     )

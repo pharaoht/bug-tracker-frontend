@@ -78,8 +78,33 @@ const postCreateMessage = async (
     await httpRequest({ requestConfig: requestConfig, callback: callbackFunc });
 }
 
+const putUpdateReadStatus = async (
+    senderId: string,
+    receiverId: string,
+    token: string,
+    httpRequest: (...args: any) => Promise<any>,
+    callbackFunc: (...args: any) => void,
+) => {
+
+    const url = window.location.host === devDomain 
+    ? `http://localhost:8000/api/messages/${senderId}/${receiverId}`
+    :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/messages/${senderId}/${receiverId}`;
+
+    const requestConfig = {
+        url: url,
+        method: 'PUT',
+        withCredentials: true,
+        headers: {
+            authorization: token
+        }
+    };
+
+    await httpRequest({ requestConfig: requestConfig, callback: callbackFunc });
+}
+
 export const messagesApi = {
     getLatestConversations,
     getMessagesById,
-    postCreateMessage
+    postCreateMessage,
+    putUpdateReadStatus
 }
