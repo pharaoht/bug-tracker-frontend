@@ -143,7 +143,7 @@ const MessageBoard = ({ selectedUser, chats, ownerId, loadConversations, token, 
 
             { areMessagesReceived && renderMessages() }
 
-            { noMessages && renderFallBack('No Chats Selected') }
+            { noMessages && renderFallBack('No Chat Selected') }
 
             { !error && loadConversations && renderFallBack(<CircularProgress/>) }
 

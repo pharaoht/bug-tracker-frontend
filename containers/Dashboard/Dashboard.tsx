@@ -61,7 +61,7 @@ const Dashboard = () => {
 
     const { getIssuesByPriority, getRecentIssues, getSortIssues, getSearchIssues } = issuesApi;
 
-    const { getMessagesById } = messagesApi;
+    const { getUnReadMessages } = messagesApi;
 
     const createNewIssueHandler = () => {
 
@@ -73,7 +73,9 @@ const Dashboard = () => {
 
     const getMessages = async () => {
 
-        if(userProfileContext?.isLoggedIn === false) return;
+        if(userProfileContext?.isLoggedIn === false || !token) return;
+
+        return await getUnReadMessages(userProfile.id, token, setMessages, messageRequest);
     }
 
     const sortFunction = async () => {
@@ -84,7 +86,6 @@ const Dashboard = () => {
     const searchFunction = async () => {
 
         const callback = (data: any[]) => {
-            
             
             if(data.length > 0) {
     
@@ -106,6 +107,10 @@ const Dashboard = () => {
     };
 
     const recentIssuesCb = (data: any[]) => {
+
+        if(!data){
+            return
+        }
         const info = {
             totalCount: data[0].totalCount,
             currentPage: data[0].currentPage,
@@ -123,10 +128,11 @@ const Dashboard = () => {
             Promise.all([
                 getRecentIssues(apiParamString, recentIssuesCb, sendRequest),
                 getIssuesByPriority('high',conetectSetUrgentIssues , sendRequest),
+
             ])
         }
 
-    },[ isOpen, viewIssueOpen ]);
+    },[ isOpen, viewIssueOpen, ]);
 
     useEffect(() => {
     
@@ -138,9 +144,14 @@ const Dashboard = () => {
                 getRecentIssues(apiParamString, recentIssuesCb, sendRequest)])
             }
         }
-    }, [ dashboardContext?.queryParams, isOpen, viewIssueOpen ])
+    }, [ dashboardContext?.queryParams, isOpen, viewIssueOpen ]);
 
-  
+
+    useEffect(()=>{
+        getMessages()
+    }, [userProfileContext])
+
+
     return (
         <section className={styles.container}>
 
@@ -157,21 +168,21 @@ const Dashboard = () => {
             <ul className={styles.boxInfo}>
                 <Widget
                   loadingState={isLoading}
-                  value={String(dashboardContext?.issueCountTotal) || '0'}
+                  value={String(dashboardContext?.issueCountTotal ?? '0') }
                   title='Total Issues'
                   color='blue'
                   icon={<TicketIcon fontSize="large" />}
                 />
                 <Widget
-                  loadingState={isLoading}
-                  value='0'
-                  title='Messages'
+                  loadingState={messagesLoading}
+                  value={String(messages?.length ?? '0') }
+                  title={messages.length == 1 ? 'Message' : 'Messages'}    
                   color='yellow'
                   icon={<MessageIcon fontSize="large"/>}
                 />
                 <Widget
                   loadingState={isLoading}
-                  value={String(dashboardContext?.urgentIssues?.length) || '0'}
+                  value={String(dashboardContext?.urgentIssues?.length ?? '0') }
                   title='High Priority'
                   color='orange'
                   icon={<UrgentIcon fontSize="large"/>}

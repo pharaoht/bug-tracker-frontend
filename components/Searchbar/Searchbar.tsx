@@ -37,7 +37,7 @@ const Searchbar = ({  placeHolder }:searchbarProps) => {
 
         if(inputValue == '') return;
 
-        if(lastQuery!== 'searchTerm') setInputvalue('');
+        if(lastQuery !== 'searchTerm') setInputvalue('');
 
     }, [lastQuery])
 

@@ -28,6 +28,30 @@ const getLatestConversations = async (
     return undefined;
 };
 
+const getUnReadMessages = async (
+    userId: string,
+    token: string,
+    contextSetter: React.Dispatch<React.SetStateAction<any[]>>,
+    httpRequest: (...args: any) => Promise<any>,
+) => {
+
+    const url = window.location.host === devDomain 
+    ? `http://localhost:8000/api/messages/newMessages/${userId}`
+    :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/messages/newMessages/${userId}`
+
+    const requestObj = {
+        url: url,
+        method: 'GET',
+        withCredentials: true,
+        headers: {
+            authorization: token
+        }
+
+    }
+
+    await httpRequest({ requestConfig: requestObj, callback: contextSetter });
+}
+
 const getMessagesById = async (
     senderId: string,
     token: string,
@@ -106,5 +130,6 @@ export const messagesApi = {
     getLatestConversations,
     getMessagesById,
     postCreateMessage,
-    putUpdateReadStatus
+    putUpdateReadStatus,
+    getUnReadMessages
 }
