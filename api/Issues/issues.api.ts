@@ -16,6 +16,7 @@ const getRecentIssues = async (
     params: string,
     contextSetter: (data: any[]) => void,
     httpRequest: (...args: any) => Promise<any>,
+    abortSignal?: AbortSignal,
 
 ) => {
 
@@ -26,11 +27,34 @@ const getRecentIssues = async (
     const requestObj = {
         url: url,
         method: 'GET',
-        withCredentials: true 
-
+        withCredentials: true,
+        signal: abortSignal
     }
 
     await httpRequest({requestConfig: requestObj, callback: contextSetter, dalService: issueDal});
+
+    return undefined;
+};
+
+const getTotalNumOfIssues = async (
+    params: string,
+    contextSetter: (data: any[]) => void,
+    httpRequest: (...args: any) => Promise<any>,
+    abortSignal?: AbortSignal,
+) => {
+
+    const url = window.location.host === devDomain 
+    ? `http://localhost:8000/api/issues/total?${params}`
+    :   `${process.env.NEXT_PUBLIC_URL_DOMAIN}/api/issues/total?${params}`
+
+    const requestObj = {
+        url: url,
+        method: 'GET',
+        withCredentials: true,
+        signal: abortSignal
+    }
+
+    await httpRequest({requestConfig: requestObj, callback: contextSetter});
 
     return undefined;
 };
@@ -40,7 +64,7 @@ const getSortIssues = async (
     params: string,
     contextSetter: (data: any[]) => void,
     httpRequest: (...args: any) => Promise<any>,
-
+    abortSignal?: AbortSignal,
 ) => {
 
     const url = window.location.host === devDomain
@@ -50,7 +74,8 @@ const getSortIssues = async (
     const requestConfig = {
         url: url,
         method: 'GET',
-        withCredentials: true 
+        withCredentials: true,
+        signal: abortSignal
     }
 
     await httpRequest({requestConfig: requestConfig, callback: contextSetter, dalService: issueDal});
@@ -101,7 +126,7 @@ const getIssuesByPriority = async (
     type: string,
     contextSetter: (data: any[]) => void,
     httpRequest: (...args: any) => Promise<any>,
-
+    abortSignal?: AbortSignal,
 ) => {
 
     const url = window.location.host === devDomain
@@ -112,7 +137,8 @@ const getIssuesByPriority = async (
     const requestConfig = {
         url: url,
         method: 'GET',
-        withCredentials: true 
+        withCredentials: true,
+        signal: abortSignal
     }
 
     await httpRequest({requestConfig: requestConfig, callback: contextSetter});
@@ -244,5 +270,6 @@ export const issuesApi = {
     postExportToPdf,
     deleteArchiveIssue,
     getSortIssues,
-    getSearchIssues
+    getSearchIssues,
+    getTotalNumOfIssues
 }

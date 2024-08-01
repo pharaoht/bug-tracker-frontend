@@ -8,8 +8,8 @@ interface useHttpType {
         method?:string;
         headers?: {};
         data?: {};
-        withCredentials?:boolean;
-
+        withCredentials?: boolean;
+        signal?: AbortSignal
     };
     callback: (...args: any) => void;
     isMultiPart?: boolean | null;
@@ -58,6 +58,10 @@ const useHttp = () => {
         catch (err: any) { 
 
             const resErr = err?.response?.data.error || undefined;
+
+            if (axios.isCancel(err)) {
+                return
+            }
             
             if (err instanceof Error) {
                 setError(resErr || err.message || 'Something went wrong');

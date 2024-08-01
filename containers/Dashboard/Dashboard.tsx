@@ -59,7 +59,7 @@ const Dashboard = () => {
     
     const { isLoading: messagesLoading, sendRequest: messageRequest, error: messageError } = useHttp();
 
-    const { getIssuesByPriority, getRecentIssues, getSortIssues, getSearchIssues } = issuesApi;
+    const { getIssuesByPriority, getRecentIssues, getSortIssues, getSearchIssues, getTotalNumOfIssues } = issuesApi;
 
     const { getUnReadMessages } = messagesApi;
 
@@ -107,10 +107,12 @@ const Dashboard = () => {
     };
 
     const recentIssuesCb = (data: any[]) => {
-
+        console.log(data)
         if(!data){
             return
         }
+
+        console.log(data)
         const info = {
             totalCount: data[0].totalCount,
             currentPage: data[0].currentPage,
@@ -123,27 +125,38 @@ const Dashboard = () => {
 
     useEffect(()=>{
 
+        const controller = new AbortController();
+    
         if(viewIssueOpen === false && isOpen === false){
 
             Promise.all([
-                getRecentIssues(apiParamString, recentIssuesCb, sendRequest),
+                getTotalNumOfIssues(apiParamString, recentIssuesCb, sendRequest, controller.signal),
                 getIssuesByPriority('high',conetectSetUrgentIssues , sendRequest),
 
             ])
-        }
+        };
+
+        return () => controller.abort()
 
     },[ isOpen, viewIssueOpen, ]);
 
     useEffect(() => {
+
+        const controller = new AbortController();
     
         if(viewIssueOpen === false && isOpen === false){
             if(lastQueryChanged === 'searchTerm') searchFunction();
             else {
-                sortFunction();
+
                 Promise.all([
-                getRecentIssues(apiParamString, recentIssuesCb, sendRequest)])
+                    getSortIssues(apiParamString, contextSetIssues, sortRequest, controller.signal),
+                    getTotalNumOfIssues(apiParamString, recentIssuesCb, sendRequest, controller.signal )
+                ])
             }
         }
+
+        return () => controller.abort()
+
     }, [ dashboardContext?.queryParams, isOpen, viewIssueOpen ]);
 
 

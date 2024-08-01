@@ -128,8 +128,8 @@ const Messages = () => {
                 />
                 <MessageBoard
                     selectedUser={selectedUser}
-                    chats={chats || []}
-                    ownerId={id || ''}
+                    chats={chats ?? []}
+                    ownerId={id ?? ''}
                     loadConversations={loadConversations}
                     token={token}
                     setSelectedUser={setSelectedUser}
