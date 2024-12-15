@@ -9,7 +9,7 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import { useEffect, useState } from "react";
 import { DashboardContextProvider } from "../context/DashboardContext";
 import { IssueContextProvider } from "@/context/IssueContainerContext";
-import { connectSocket } from "@/sockets";
+
 
 const Home = () => {
 
