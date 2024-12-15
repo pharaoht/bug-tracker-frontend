@@ -107,16 +107,15 @@ const Dashboard = () => {
     };
 
     const recentIssuesCb = (data: any[]) => {
-        console.log(data)
+
         if(!data){
             return
         }
 
-        console.log(data)
         const info = {
-            totalCount: data[0].totalCount,
-            currentPage: data[0].currentPage,
-            totalPages: data[0].totalPages,
+            totalCount: data[0]?.totalCount,
+            currentPage: data[0]?.currentPage,
+            totalPages: data[0]?.totalPages,
         }
         conetextSetIssueTotalCount(info);
         contextSetPagination(info);
